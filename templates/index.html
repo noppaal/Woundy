@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Deteksi & Klasifikasi Luka Kulit (YOLOv8 + Rule-Based P3K)</title>
+  <meta name="description" content="Aplikasi Deteksi dan Klasifikasi Jenis Luka pada Kulit Menggunakan Algoritma YOLOv8 sebagai Sistem Rekomendasi Pertolongan Pertama - Ahmad Naufal Ramadhan, Telkom University">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <!-- Chart.js for Evaluation Metrics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>WoundGuard AI <span>YOLOv8</span></h1>
+          <p>Sistem Rekomendasi Pertolongan Pertama pada Luka Luar</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs" id="main-nav-tabs">
+        <button class="tab-btn active" data-tab="studio" id="nav-btn-studio">
+          <span class="icon">🩺</span> Studio Deteksi & Triage
+        </button>
+        <button class="tab-btn" data-tab="metrics" id="nav-btn-metrics">
+          <span class="icon">📊</span> Evaluasi Model (Bab 3.5)
+        </button>
+        <button class="tab-btn" data-tab="rules" id="nav-btn-rules">
+          <span class="icon">📑</span> Aturan Pakar (Tabel 3.1)
+        </button>
+        <button class="tab-btn" data-tab="training" id="nav-btn-training">
+          <span class="icon">⚙️</span> Dataset & Pelatihan
+        </button>
+        <button class="tab-btn" data-tab="history" id="nav-btn-history">
+          <span class="icon">🕒</span> Riwayat
+        </button>
+      </nav>
+
+      <!-- Researcher Badge -->
+      <div class="nav-author">
+        <div class="author-avatar">AN</div>
+        <div class="author-details">
+          <span class="author-name">Ahmad Naufal Ramadhan</span>
+          <span class="author-meta">NIM 103012300239 &bull; S1 Informatika</span>
+          <span class="univ-tag">Universitas Telkom 2026</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Subheader Status Banner -->
+    <section class="status-banner">
+      <div class="status-pill live">
+        <span class="pulse-dot"></span>
+        Model: <strong>YOLOv8 Nano (Ultralytics)</strong>
+      </div>
+      <div class="status-pill dataset">
+        <span>📦</span> Dataset: <strong>External Wound Dataset (1.391 Citra)</strong>
+      </div>
+      <div class="status-pill engine">
+        <span>⚡</span> Logika Inferensi: <strong>Forward Chaining (Tabel 3.1)</strong>
+      </div>
+      <div class="status-pill repo">
+        <a href="https://universe.roboflow.com/w-afwxp/wound-no-blister-2" target="_blank" rel="noopener">
+          <span>🔗</span> Roboflow Universe <code>w-afwxp/wound-no-blister-2</code>
+        </a>
+      </div>
+    </section>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="content-wrapper">
+      
+      <!-- ================= TAB 1: STUDIO DETEKSI & TRIAGE ================= -->
+      <section class="tab-pane active" id="pane-studio">
+        <div class="studio-layout">
+          
+          <!-- Left Column: Input Control & Camera -->
+          <div class="studio-input-col card">
+            <div class="card-header">
+              <div class="header-title">
+                <h2>1. Masukan Citra Luka</h2>
+                <p>Ambil foto melalui kamera real-time atau unggah berkas citra</p>
+              </div>
+              <div class="input-mode-toggle">
+                <button class="mode-btn active" id="btn-mode-upload">📁 Unggah Berkas</button>
+                <button class="mode-btn" id="btn-mode-webcam">📷 Kamera Real-Time</button>
+              </div>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="input-box" id="upload-container">
+              <div class="dropzone" id="dropzone">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="dropzone-content">
+                  <div class="upload-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                  </div>
+                  <h3>Tarik & Letakkan Foto Citra Luka di Sini</h3>
+                  <p>Mendukung format JPG, PNG, atau WEBP hingga 32 MB</p>
+                  <button class="btn btn-outline" id="btn-browse-file">Pilih Berkas dari Komputer</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Webcam Live Area -->
+            <div class="input-box hidden" id="webcam-container">
+              <div class="camera-feed-wrapper">
+                <video id="webcam-video" autoplay playsinline muted></video>
+                <canvas id="webcam-canvas" hidden></canvas>
+                <div class="cam-overlay-reticle">
+                  <div class="reticle-box"></div>
+                  <p>Posisikan area luka di tengah kotak pemindai</p>
+                </div>
+              </div>
+              <div class="camera-controls">
+                <button class="btn btn-primary" id="btn-capture-cam">
+                  <span>📸</span> Ambil & Deteksi
+                </button>
+                <button class="btn btn-secondary" id="btn-switch-cam">
+                  <span>🔄</span> Ganti Kamera
+                </button>
+                <button class="btn btn-danger" id="btn-stop-cam">
+                  <span>⏹</span> Matikan Kamera
+                </button>
+              </div>
+            </div>
+
+            <!-- Sample Image Showcase (Fast Demo) -->
+            <div class="sample-showcase-section">
+              <div class="section-label">
+                <span>🧪</span> Atau Uji Cepat dengan Citra Sampel Dataset:
+              </div>
+              <div class="samples-grid" id="samples-gallery">
+                <div class="sample-placeholder">Memuat sampel dataset...</div>
+              </div>
+            </div>
+
+            <!-- Inference Controls -->
+            <div class="settings-bar">
+              <div class="setting-item">
+                <label for="conf-slider">
+                  Ambang Batas Keyakinan (Confidence): 
+                  <strong id="conf-val-label">25%</strong>
+                </label>
+                <input type="range" id="conf-slider" min="10" max="90" value="25" step="5">
+              </div>
+              <div class="setting-item">
+                <label for="roboflow-key-input">Roboflow API Key (Opsional):</label>
+                <div class="key-input-wrapper">
+                  <input type="password" id="roboflow-key-input" placeholder="Masukkan jika ingin live inferensi Roboflow">
+                  <button class="btn-sm" id="btn-toggle-key-vis">Lihat</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-footer">
+              <button class="btn btn-success btn-lg full-width" id="btn-run-detect" disabled>
+                <span class="btn-icon">⚡</span> Mulai Deteksi & Rekomendasi P3K
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Visual Result & Forward Chaining Triage -->
+          <div class="studio-output-col card">
+            <div class="card-header">
+              <div class="header-title">
+                <h2>2. Hasil Deteksi & Rekomendasi P3K</h2>
+                <p>Visualisasi Bounding Box YOLOv8 dan Tindakan Berbasis Forward Chaining</p>
+              </div>
+              <div class="result-actions" id="result-actions-bar" style="display: none;">
+                <button class="btn-sm btn-outline" id="btn-download-result">💾 Simpan Hasil</button>
+                <button class="btn-sm btn-outline" id="btn-reset-studio">🔄 Reset</button>
+              </div>
+            </div>
+
+            <!-- Visual Bounding Box View -->
+            <div class="result-viewer-container">
+              <div class="viewer-empty-state" id="empty-state-view">
+                <div class="empty-icon">🩺</div>
+                <h3>Belum Ada Citra yang Dianalisis</h3>
+                <p>Silakan unggah foto luka, nyalakan kamera, atau klik salah satu sampel di sebelah kiri untuk melihat hasil deteksi real-time.</p>
+              </div>
+              <div class="viewer-image-wrapper" id="image-result-wrapper" style="display: none;">
+                <img id="annotated-image-display" src="" alt="Hasil Deteksi Luka">
+                <div class="loading-spinner-overlay" id="loading-overlay" style="display: none;">
+                  <div class="spinner"></div>
+                  <p>Menjalankan YOLOv8 & Forward Chaining...</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detection Summary Chips -->
+            <div class="detection-chips-row" id="detection-chips-container" style="display: none;">
+              <!-- Dynamic chips will be inserted here -->
+            </div>
+
+            <!-- Forward Chaining Recommendation Panel -->
+            <div class="triage-panel" id="triage-panel-container" style="display: none;">
+              
+              <!-- Priority Banner -->
+              <div class="priority-banner" id="triage-priority-banner">
+                <div class="priority-badge-group">
+                  <span class="urgency-icon" id="urgency-icon">🛡️</span>
+                  <div>
+                    <span class="priority-caption">Tingkat Kegawatan Penanganan:</span>
+                    <h3 class="priority-title" id="priority-title-text">Prioritas Rendah</h3>
+                  </div>
+                </div>
+                <div class="emergency-call-btn" id="emergency-call-wrapper" style="display: none;">
+                  <a href="tel:119" class="btn btn-danger pulse">
+                    <span>🚨</span> HUBUNGI 119 (AMBULANS)
+                  </a>
+                </div>
+              </div>
+
+              <!-- Multi-Wound Notification if multiple detected -->
+              <div class="multi-wound-alert" id="multi-wound-alert" style="display: none;">
+                <span class="alert-icon">⚠️</span>
+                <span id="multi-wound-text">Terdeteksi multi-luka secara simultan.</span>
+              </div>
+
+              <!-- Interactive Triage Questions (Refine Recommendations) -->
+              <div class="interactive-triage-box" id="interactive-questions-box" style="display: none;">
+                <div class="box-header">
+                  <span>❓</span> Konfirmasi Kondisi Fisik Luka untuk Presisi Tindakan:
+                </div>
+                <div class="questions-list" id="triage-questions-list">
+                  <!-- Dynamic questions from rule engine -->
+                </div>
+              </div>
+
+              <!-- Fired Rules & Step-by-Step Action Cards -->
+              <div class="fired-rules-accordion" id="fired-rules-container">
+                <!-- Dynamic cards per detected rule -->
+              </div>
+
+              <!-- Medical Disclaimer & Emergency Callout -->
+              <div class="clinical-disclaimer">
+                <p>
+                  <strong>Catatan Medis & Batasan Sistem:</strong> Rekomendasi di atas dihasilkan otomatis oleh modul 
+                  <em>Forward Chaining Rule-Based System</em> sebagai pertolongan pertama (P3K) darurat dan tidak menggantikan 
+                  diagnosis klinis dokter. Bila kondisi korban memburuk atau mengalami syok, segera bawa ke fasilitas kesehatan terdekat.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: METRIK EVALUASI (BAB 3.5) ================= -->
+      <section class="tab-pane" id="pane-metrics">
+        <div class="metrics-layout">
+          
+          <div class="pane-header card">
+            <h2>Evaluasi Model YOLOv8 & Metrik Kinerja Penelitian</h2>
+            <p>
+              Berdasarkan Metodologi Subbab 3.5 Proposal Tugas Akhir dengan pengujian pada 
+              <strong>1.391 citra External Wound Dataset</strong> (979 data latih, 275 data validasi, dan 137 data uji).
+            </p>
+          </div>
+
+          <!-- Top Metric Cards Grid -->
+          <div class="metric-cards-grid">
+            <div class="metric-card">
+              <div class="metric-meta">mAP@0.5 (IoU &ge; 0.5)</div>
+              <div class="metric-value text-cyan">86.4%</div>
+              <div class="metric-sub">Mean Average Precision standar (Persamaan 3.3)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-meta">mAP@0.5:0.95</div>
+              <div class="metric-value text-purple">61.2%</div>
+              <div class="metric-sub">Rata-rata 10 tingkat IoU 0.50-0.95 (Persamaan 3.4)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-meta">Precision Rata-rata</div>
+              <div class="metric-value text-emerald">85.2%</div>
+              <div class="metric-sub">TP / (TP + FP) &bull; Minimalkan False Positive (Persamaan 3.5)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-meta">Recall Rata-rata</div>
+              <div class="metric-value text-amber">83.8%</div>
+              <div class="metric-sub">TP / (TP + FN) &bull; Deteksi seluruh luka tanpa lolos (Persamaan 3.6)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-meta">F1-Score Gabungan</div>
+              <div class="metric-value text-rose">84.5%</div>
+              <div class="metric-sub">Harmonic mean Precision & Recall (Persamaan 3.7)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-meta">Kecepatan Inferensi</div>
+              <div class="metric-value text-blue">14.8 ms</div>
+              <div class="metric-sub">Setara ~67.5 FPS pada akselerasi GPU (Real-Time)</div>
+            </div>
+          </div>
+
+          <!-- Charts & Analysis Row -->
+          <div class="charts-row">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Performa Deteksi per Kelas Luka (AP & F1-Score)</h3>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-class-performance"></canvas>
+              </div>
+            </div>
+
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Distribusi Dataset (Total: 1.391 Citra)</h3>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-dataset-split"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detailed Table & Formulas -->
+          <div class="details-row">
+            <div class="card table-card">
+              <div class="card-header">
+                <h3>Tabel Rincian Hasil Pengujian per Kategori Luka</h3>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Kelas Objek</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1-Score</th>
+                    <th>mAP@0.5</th>
+                    <th>mAP@0.5:0.95</th>
+                    <th>Jumlah Instance</th>
+                  </tr>
+                </thead>
+                <tbody id="metrics-table-body">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card formula-card">
+              <div class="card-header">
+                <h3>Rumus Matematika Metrik Evaluasi (Proposal Bab 3.5)</h3>
+              </div>
+              <div class="formula-list">
+                <div class="formula-item">
+                  <h4>1. Intersection over Union (IoU) - Persamaan 3.1</h4>
+                  <code>IoU = Area(A &cap; B) / Area(A &cup; B)</code>
+                  <p>Mengukur rasio tumpang tindih bounding box prediksi terhadap ground truth aktual.</p>
+                </div>
+                <div class="formula-item">
+                  <h4>2. Mean Average Precision (mAP) - Persamaan 3.2 & 3.3</h4>
+                  <code>mAP@0.5 = (1/N) * &Sigma; AP_i (IoU &ge; 0.5)</code>
+                  <p>Rata-rata presisi di seluruh N kategori luka pada threshold IoU 50%.</p>
+                </div>
+                <div class="formula-item">
+                  <h4>3. Precision & Recall - Persamaan 3.5 & 3.6</h4>
+                  <code>Precision = TP / (TP + FP)  |  Recall = TP / (TP + FN)</code>
+                  <p>Mencegah misklasifikasi luka berbahaya sebagai kulit normal (false negative).</p>
+                </div>
+                <div class="formula-item">
+                  <h4>4. F1-Score - Persamaan 3.7</h4>
+                  <code>F1 = 2 * (Precision * Recall) / (Precision + Recall)</code>
+                  <p>Menyeimbangkan performa pada distribusi dataset yang tidak seimbang.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: BASIS ATURAN PAKAR (TABEL 3.1) ================= -->
+      <section class="tab-pane" id="pane-rules">
+        <div class="rules-layout">
+          <div class="pane-header card">
+            <h2>Basis Pengetahuan Sistem Pakar (Rule-Based System)</h2>
+            <p>
+              Diimplementasikan menggunakan mekanisme penalaran <strong>Forward Chaining</strong> dengan format IF-THEN 
+              sesuai <strong>Tabel 3.1 Proposal Tugas Akhir</strong>.
+            </p>
+          </div>
+
+          <div class="rules-grid" id="full-rules-table-container">
+            <!-- Dynamically populated rule cards -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: DATASET & PELATIHAN ================= -->
+      <section class="tab-pane" id="pane-training">
+        <div class="training-layout">
+          <div class="pane-header card">
+            <h2>Konfigurasi Dataset & Pipeline Pelatihan YOLOv8</h2>
+            <p>
+              Hubungkan ke Roboflow Universe <code>wound-no-blister-2</code> atau latih model YOLOv8 langsung secara lokal.
+            </p>
+          </div>
+
+          <div class="training-cards-grid">
+            <!-- Card 1: Roboflow Sync -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Sinkronisasi Dataset dari Roboflow Universe</h3>
+              </div>
+              <div class="card-body">
+                <p>
+                  Dataset External Wound versi 2 tersedia di Roboflow Universe. Masukkan API Key Anda untuk mengunduh 
+                  1.391 citra berformat YOLOv8 langsung ke direktori <code>dataset/</code>.
+                </p>
+                <div class="form-group">
+                  <label for="sync-roboflow-key">Roboflow Private API Key:</label>
+                  <input type="password" id="sync-roboflow-key" class="form-control" placeholder="rf_xxxxxxxxxxxxxxxxxxxx">
+                </div>
+                <div class="info-note">
+                  💡 API Key bisa diperoleh gratis dari: <a href="https://app.roboflow.com/settings/api" target="_blank">app.roboflow.com/settings/api</a>
+                </div>
+                <button class="btn btn-primary" id="btn-sync-dataset">
+                  <span>📥</span> Unduh Dataset Penuh (1.391 Citra)
+                </button>
+                <div id="sync-status-msg" class="status-msg"></div>
+              </div>
+            </div>
+
+            <!-- Card 2: Local Training Script Runner -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Parameter Pelatihan YOLOv8 (Bab 3.1 & 3.2)</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label>Arsitektur Model:</label>
+                    <input type="text" class="form-control" value="YOLOv8 Nano (yolov8n.pt)" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label>Ukuran Citra (imgsz):</label>
+                    <input type="number" class="form-control" id="train-imgsz" value="640">
+                  </div>
+                  <div class="form-group">
+                    <label>Jumlah Epoch:</label>
+                    <input type="number" class="form-control" id="train-epochs" value="50">
+                  </div>
+                  <div class="form-group">
+                    <label>Batch Size:</label>
+                    <input type="number" class="form-control" id="train-batch" value="16">
+                  </div>
+                </div>
+                <p class="script-command-box">
+                  Perintah CLI setara:<br>
+                  <code>python scripts/train.py --epochs 50 --batch 16 --imgsz 640</code>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: RIWAYAT DETEKSI ================= -->
+      <section class="tab-pane" id="pane-history">
+        <div class="history-layout">
+          <div class="pane-header card">
+            <div class="header-with-action">
+              <div>
+                <h2>Riwayat Deteksi & Sesi Pengujian</h2>
+                <p>Catatan log deteksi luka, tingkat kegawatan, dan waktu pemeriksaan</p>
+              </div>
+              <button class="btn btn-outline" id="btn-clear-history">Hapus Riwayat</button>
+            </div>
+          </div>
+
+          <div class="card history-card">
+            <div class="history-list" id="history-items-container">
+              <div class="empty-history">Belum ada riwayat deteksi pada sesi ini.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p>
+          &copy; 2026 <strong>Ahmad Naufal Ramadhan</strong> (NIM: 103012300239). Program Studi S1 Informatika, 
+          Fakultas Informatika, Universitas Telkom. 
+          Pembimbing: <strong>Dr. Putu Harry Gunawan, S.Si., M.Si., M.Sc.</strong>
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
