@@ -1,0 +1,88 @@
+rules:
+  R001:
+    id: "R001"
+    name: "Abrasion"
+    label_id: "Luka lecet"
+    label_en: "Abrasion"
+    condition_desc: "Terdeteksi luka lecet pada permukaan kulit tanpa perdarahan aktif."
+    base_priority: "Rendah"
+    priority_level: 1
+    actions:
+      - "Bersihkan area luka dengan air mengalir secara perlahan untuk menghilangkan debu atau kotoran."
+      - "Oleskan cairan antiseptik ringan (povidone iodine) secara tipis dan merata di sekeliling permukaan luka."
+      - "Tutup permukaan luka dengan perban steril atau plester pelekat agar terlindung dari gesekan dan bakteri."
+      - "Ganti perban setiap satu sampai dua hari sekali, atau segera apabila perban menjadi basah atau kotor."
+    critical_warnings:
+      - "Hindari menggosok permukaan luka secara kasar agar tidak merusak lapisan jaringan baru."
+      - "Jangan menggunakan alkohol konsentrasi tinggi langsung pada luka terbuka karena menimbulkan rasa perih hebat dan iritasi sel."
+    notes: "Perawatan mandiri dapat dilakukan di rumah. Kunjungi fasilitas kesehatan jika luka menunjukkan tanda infeksi seperti nanah atau demam."
+
+  R002:
+    id: "R002"
+    name: "Bruise"
+    label_id: "Luka memar"
+    label_en: "Bruise"
+    condition_desc: "Terdeteksi memar akibat benturan di bawah kulit tanpa luka terbuka."
+    base_priority: "Rendah"
+    priority_level: 1
+    actions:
+      - "Kompres area memar dengan kantong es yang dibalut kain bersih selama 15 sampai 20 menit."
+      - "Istirahatkan bagian tubuh yang terkena benturan dan hindari aktivitas fisik berlebih."
+      - "Posisikan area yang memar lebih tinggi dari posisi jantung jika memungkinkan untuk mengurangi pembengkakan."
+      - "Jika memar disertai rasa nyeri hebat atau pembengkakan membesar signifikan setelah beberapa jam, segera periksakan ke dokter."
+    critical_warnings:
+      - "JANGAN menempelkan es batu secara langsung pada permukaan kulit tanpa pembungkus kain karena berisiko memicu kerusakan jaringan akibat radang dingin (ice burn)."
+      - "JANGAN memijat, mengurut, atau menekan area luka memar dalam 48 jam pertama setelah benturan."
+    notes: "Menerapkan metode RICE (Rest, Ice, Compression, Elevation) efektif meredakan nyeri memar ringan."
+
+  R003:
+    id: "R003"
+    name: "Burn"
+    label_id: "Luka bakar"
+    label_en: "Burn"
+    condition_desc: "Terdeteksi luka bakar akibat kontak panas, cairan panas, atau api."
+    base_priority: "Sedang"
+    priority_level: 2
+    actions:
+      - "Segera alirkan air bersih bersuhu sejuk (bukan es) pada area luka selama minimal 10 hingga 20 menit."
+      - "Lepaskan benda ketat seperti cincin, jam tangan, atau pakaian di sekitar luka sebelum area membengkak, kecuali bila menempel pada kulit."
+      - "Oleskan gel lidah buaya murni atau salep luka bakar ringan jika permukaan kulit hanya merah tanpa lepuhan."
+      - "Tutup luka bakar secara longgar menggunakan kain kasa steril kering atau plastik pembungkus bersih tanpa ditekan."
+    critical_warnings:
+      - "JANGAN mengoleskan pasta gigi, mentega, kecap, tepung, minyak goreng, atau es batu pada luka bakar karena memicu infeksi berat dan memperparah kerusakan jaringan."
+      - "JANGAN memecahkan gelembung lepuhan (bula) secara sengaja karena kulit lepuhan adalah pelindung alami dari kuman."
+    notes: "Segera menuju fasilitas kesehatan terdekat jika luka bakar berukuran luas (>5 cm), mengenai wajah, persendian, atau area genital."
+
+  R004:
+    id: "R004"
+    name: "Cut"
+    label_id: "Luka sayat"
+    label_en: "Cut"
+    condition_desc: "Terdeteksi luka terputus atau robekan akibat benda tajam."
+    base_priority: "Sedang"
+    priority_level: 2
+    actions:
+      - "Hentikan perdarahan dengan menekan luka menggunakan kain kasa steril atau kain bersih."
+      - "Bersihkan luka di bawah air mengalir perlahan setelah perdarahan terkendali."
+      - "Rapatkan tepi luka kecil menggunakan plester strip steril, lalu tutup dengan perban bersih."
+      - "Pantau kebersihan luka setiap hari dan ganti balutan secara berkala."
+    critical_warnings:
+      - "JANGAN mencabut benda asing atau tajam (seperti pecahan kaca atau pisau) yang masih menancap dalam luka, fiksasi di posisinya dan segera ke rumah sakit."
+      - "Jika darah mengucur deras tanpa henti setelah 5 menit penekanan, segera hubungi layanan ambulans 119 atau menuju IGD."
+    notes: "Luka sayat yang dalam (>2 cm) atau tepi menganga membutuhkan tindakan penjahitan medis dalam waktu kurang dari 6 jam."
+
+  R005:
+    id: "R005"
+    name: "No Abnormality"
+    label_id: "Kulit normal"
+    label_en: "No Abnormality"
+    condition_desc: "Area kulit tidak menunjukkan indikasi luka lecet, memar, bakar, maupun sayat."
+    base_priority: "Normal"
+    priority_level: 0
+    actions:
+      - "Permukaan kulit teridentifikasi dalam kondisi normal dan bersih."
+      - "Jaga kebersihan kulit harian dengan mandi menggunakan sabun berformula lembut."
+      - "Gunakan pelembap dan tabir surya saat beraktivitas di luar ruangan untuk melindungi sawar kulit."
+    critical_warnings:
+      - "Bila merasakan nyeri menusuk, mati rasa, atau sensasi terbakar di balik kulit meskipun tampak normal, konsultasikan dengan dokter."
+    notes: "Kondisi kontrol normal tanpa indikasi kegawatdaruratan."

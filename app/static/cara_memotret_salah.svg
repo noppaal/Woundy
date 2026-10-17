@@ -1,0 +1,24 @@
+<svg width="320" height="200" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Latar belakang card bernuansa netral/abu hangat -->
+  <rect width="320" height="200" rx="6" fill="#E8E2DA"/>
+
+  <!-- Bingkai foto di atas meja / terlalu jauh -->
+  <rect x="36" y="24" width="248" height="152" rx="4" fill="#FFFFFF" stroke="#D3C3B3" stroke-width="1.5"/>
+
+  <!-- Garis perspektif meja -->
+  <line x1="36" y1="130" x2="284" y2="130" stroke="#EFE9E2" stroke-width="1"/>
+
+  <!-- Subjek luka sangat kecil & jauh -->
+  <line x1="110" y1="115" x2="210" y2="82" stroke="#D6A77B" stroke-width="4.5" stroke-linecap="round"/>
+  <ellipse cx="160" cy="98" rx="5" ry="3" fill="#9E3B3B"/>
+
+  <!-- Efek buram gelombang / tidak fokus -->
+  <path d="M120 62 Q160 56 200 62" stroke="#C4B5A5" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <path d="M120 135 Q160 141 200 135" stroke="#C4B5A5" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+  <!-- Lingkaran dan tanda silang hitam tegas (X) di pojok kanan bawah -->
+  <g transform="translate(262, 142)">
+    <circle cx="16" cy="16" r="18" fill="#2B1E1E"/>
+    <path d="M9 9 L23 23 M23 9 L9 23" stroke="#FAF6F2" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

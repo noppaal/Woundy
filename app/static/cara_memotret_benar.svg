@@ -1,0 +1,42 @@
+<svg width="320" height="200" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="200" rx="6" fill="#E6EFE7"/>
+  
+  <!-- Grid halus tekstur mikroskopis -->
+  <defs>
+    <pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse">
+      <path d="M 16 0 L 0 0 0 16" fill="none" stroke="#D3E2D4" stroke-width="0.75"/>
+    </pattern>
+  </defs>
+  <rect width="320" height="200" fill="url(#grid)"/>
+
+  <!-- Siluet permukaan kulit/lengan makro diagonal -->
+  <path d="M-30 210 L350 30 L320 -20 L-60 160 Z" fill="#E9C7A4"/>
+  <path d="M-30 210 L350 30" stroke="#D6A77B" stroke-width="3"/>
+  <path d="M-60 160 L320 -20" stroke="#F1D7BE" stroke-width="2"/>
+
+  <!-- Lesi luka terpusat tajam -->
+  <ellipse cx="160" cy="100" rx="34" ry="19" fill="#9E3B3B" transform="rotate(-22 160 100)"/>
+  <ellipse cx="160" cy="100" rx="22" ry="12" fill="#752222" transform="rotate(-22 160 100)"/>
+  <ellipse cx="157" cy="98" rx="10" ry="5" fill="#D99B26" opacity="0.7" transform="rotate(-22 160 100)"/>
+
+  <!-- Garis pindai fokus animasi -->
+  <line x1="60" y1="45" x2="260" y2="45" stroke="#3B7A57" stroke-width="2" stroke-dasharray="4 2" opacity="0.8">
+    <animate attributeName="y1" values="45;155;45" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="45;155;45" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.9;0.3" dur="3s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Cincin fokus berdenyut -->
+  <circle cx="160" cy="100" r="38" stroke="#3B7A57" stroke-width="1.75" stroke-dasharray="4 3" fill="none">
+    <animate attributeName="r" values="34;42;34" dur="2.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.35;0.95;0.35" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 4 Sudut pembatas kamera (Viewfinder [ ]) -->
+  <g stroke="#2B1E1E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 28 52 V 28 H 52"/>
+    <path d="M 268 28 H 292 V 52"/>
+    <path d="M 28 148 V 172 H 52"/>
+    <path d="M 268 172 H 292 V 148"/>
+  </g>
+</svg>

@@ -1,0 +1,72 @@
+# Konfigurasi Sistem Deteksi & Rekomendasi P3K Luka Kulit
+# (YOLOv8 ONNX + Forward Chaining)
+
+app:
+  title: "Deteksi Luka Kulit & Rekomendasi P3K"
+  subtitle: "Sistem panduan pertolongan pertama awal berbasis deteksi visual dan penalaran aturan medis"
+  max_upload_size_mb: 10
+  allowed_extensions:
+    - "jpg"
+    - "jpeg"
+    - "png"
+    - "webp"
+    - "avif"
+    - "bmp"
+    - "tiff"
+    - "heic"
+
+# Ambang Batas Tingkat Keyakinan (Confidence Thresholds)
+thresholds:
+  detected: 0.35          # >= 0.35: Status Terdeteksi
+  possible_min: 0.29      # 0.29 s.d. 0.35: Status Kemungkinan
+  possible_max: 0.35
+  not_detected: 0.29      # < 0.29: Status Tidak Terdeteksi
+  iou_nms: 0.45           # Non-Maximum Suppression IoU Threshold
+
+# Petunjuk Pemotretan Area Luka
+camera_instructions:
+  text: "Pastikan area kulit terlihat jelas, jarak kamera sekitar 10-20 cm, cahaya cukup terang tetapi tidak memantul silau, dan kamera fokus pada area luka. Bersihkan kotoran yang menutupi permukaan kulit bila memungkinkan."
+  tips:
+    - "Jarak pemotretan optimal: 10-20 cm"
+    - "Pencahayaan cukup terang, hindari bayangan gelap atau pantulan silau langsung"
+    - "Posisikan luka di tengah bingkai kamera dan pastikan fokus tajam"
+
+# Palet Warna Resmi
+palette:
+  primary: "#9E3B3B"          # Merah Medis (Utama / Status Terdeteksi)
+  secondary: "#FFEAD3"        # Krem Hangat (Latar Kotak Petunjuk & Sorotan)
+  background: "#FAF6F2"       # Putih Gading / Kasa Bersih
+  text: "#2B1E1E"             # Tinta Cokelat Gelap
+  status_possible: "#D99B26"  # Kuning Amber (Status Kemungkinan)
+  status_not_detected: "#526B7A" # Abu Kebiruan (Status Tidak Terdeteksi)
+  status_normal: "#3B7A57"    # Hijau Teduh (Status Normal / No Abnormality)
+
+# Pemetaan Kelas Luka
+classes:
+  0:
+    id_name: "Luka lecet"
+    en_name: "Abrasion"
+    rule_id: "R001"
+  1:
+    id_name: "Luka memar"
+    en_name: "Bruise"
+    rule_id: "R002"
+  2:
+    id_name: "Luka bakar"
+    en_name: "Burn"
+    rule_id: "R003"
+  3:
+    id_name: "Luka sayat"
+    en_name: "Cut"
+    rule_id: "R004"
+  4:
+    id_name: "Kulit normal"
+    en_name: "No Abnormality"
+    rule_id: "R005"
+
+# Informasi Halaman Tentang & Atribusi
+about:
+  system_description: "Aplikasi ini memadukan deteksi visual berbasis model convolutional YOLOv8 (ONNX) untuk melokalisasi area luka dan mengukur tingkat keyakinan, dengan mesin penalaran Forward Chaining berbasis aturan medis (R001-R005) untuk menentukan tingkat prioritas serta langkah pertolongan pertama (P3K) yang terstruktur."
+  dataset_attribution: "External Wound Dataset (Roboflow Universe & Kaggle, total 1.391 citra beranotasi untuk 5 kategori lesi kulit)."
+  privacy_statement: "Citra yang Anda unggah atau ambil dari kamera hanya diproses langsung pada memori sesi saat inferensi berlangsung. Citra tidak disimpan pada penyimpanan permanen atau server eksternal, dan langsung dibersihkan setelah analisis selesai."
+  medical_disclaimer: "Sistem ini hanya dirancang untuk mengidentifikasi 5 kategori permukaan kulit: Luka lecet (Abrasion), Luka memar (Bruise), Luka bakar (Burn), Luka sayat (Cut), dan Kulit normal (No Abnormality). Akurasi deteksi sangat dipengaruhi oleh kualitas pencahayaan, sudut pengambilan gambar, serta kebersihan area kulit. Seluruh rekomendasi yang disajikan merupakan panduan pertolongan pertama awal (P3K) dan bukan pengganti diagnosis, resep, atau penanganan langsung oleh dokter maupun tenaga medis profesional. Pada kondisi perdarahan hebat, luka bakar luas, atau kecurigaan patah tulang, segera hubungi layanan gawat darurat (119/112) atau kunjungi fasilitas kesehatan terdekat."
