@@ -33,15 +33,13 @@ if CURRENT_DIR not in sys.path:
 if PARENT_DIR not in sys.path:
     sys.path.insert(1, PARENT_DIR)
 
-# Impor mesin inferensi, aturan, dan metrik evaluasi
+# Impor mesin inferensi dan aturan
 try:
     from core.detector import WoundONNXDetector
     from rbs.engine import ForwardChainingEngine
-    from core.evaluator import BENCHMARK_RESULTS
 except ImportError:
     from app.core.detector import WoundONNXDetector
     from app.rbs.engine import ForwardChainingEngine
-    from app.core.evaluator import BENCHMARK_RESULTS
 
 # -----------------------------------------------------------------------------
 # Konfigurasi Halaman Streamlit
@@ -1326,7 +1324,7 @@ safe_markdown(header_html)
 # Navigasi Halaman Utama (Segmented Tab Bar)
 current_page = st.radio(
     label="Pilih menu navigasi",
-    options=["Pemeriksaan luka", "Metrik evaluasi model", "Tentang sistem"],
+    options=["Pemeriksaan luka", "Tentang sistem"],
     index=0,
     horizontal=True,
     label_visibility="collapsed"
@@ -1853,208 +1851,7 @@ if current_page == "Pemeriksaan luka":
     )
 
 # -----------------------------------------------------------------------------
-# Halaman 2: Metrik Evaluasi Model (Kinerja Riset YOLOv8)
-# -----------------------------------------------------------------------------
-elif current_page == "Metrik evaluasi model":
-    safe_markdown("""
-    <div style="margin: 0.5rem 0 1.25rem 0;">
-        <h2 style="font-size: 1.45rem; font-weight: 800; color: #2B1E1E; letter-spacing: -0.02em; margin: 0 0 4px 0;">Metrik Evaluasi Model Deteksi</h2>
-        <p style="font-size: 0.88rem; color: #6E5C5C; margin: 0;">Kinerja kuantitatif model YOLOv8 pada External Wound Dataset (1.391 citra) sesuai Subbab 3.5 Proposal Tugas Akhir</p>
-    </div>
-    """)
-
-    metrics_ov = BENCHMARK_RESULTS.get("metrics_overall", {})
-    metrics_cls = BENCHMARK_RESULTS.get("metrics_per_class", {})
-    dataset_info = BENCHMARK_RESULTS.get("dataset_info", {})
-    conf_mat = BENCHMARK_RESULTS.get("confusion_matrix", {})
-
-    # 1. Kartu Ringkasan Metrik Utama (6 Parameter)
-    safe_markdown(
-        f"""
-        <div class="metric-grid">
-            <div class="metric-card">
-                <div class="metric-card-val tabular-number">{metrics_ov.get('mAP_50', 0.864) * 100:.1f}%</div>
-                <div class="metric-card-lbl">mAP@0.5</div>
-                <div class="metric-card-sub">IoU Ambang 0.50</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-card-val tabular-number">{metrics_ov.get('mAP_50_95', 0.612) * 100:.1f}%</div>
-                <div class="metric-card-lbl">mAP@0.5:0.95</div>
-                <div class="metric-card-sub">Rerata Multi-Ambang</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-card-val tabular-number">{metrics_ov.get('precision', 0.852) * 100:.1f}%</div>
-                <div class="metric-card-lbl">Presisi (Precision)</div>
-                <div class="metric-card-sub">Ketepatan deteksi positif</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-card-val tabular-number">{metrics_ov.get('recall', 0.838) * 100:.1f}%</div>
-                <div class="metric-card-lbl">Sensitivitas (Recall)</div>
-                <div class="metric-card-sub">Cakupan lesi terdeteksi</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-card-val tabular-number">{metrics_ov.get('f1_score', 0.845) * 100:.1f}%</div>
-                <div class="metric-card-lbl">F1-Score</div>
-                <div class="metric-card-sub">Keseimbangan P &amp; R</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-card-val tabular-number">{metrics_ov.get('inference_speed_ms', 14.8)} ms</div>
-                <div class="metric-card-lbl">Waktu Inferensi</div>
-                <div class="metric-card-sub">Setara ~{metrics_ov.get('fps', 67.5)} FPS</div>
-            </div>
-        </div>
-        """
-    )
-
-    # 2. Layout Desktop Dua Kolom untuk Evaluasi Mendalam
-    col_p2_left, col_p2_right = st.columns([1.15, 0.85], gap="large")
-
-    with col_p2_left:
-        st.markdown("<h3 style='font-size: 1.1rem; font-weight: 700; color: #2B1E1E; margin: 0 0 0.5rem 0;'>Kinerja Deteksi per Kategori Lesi Kulit</h3>", unsafe_allow_html=True)
-        table_rows = ""
-        for raw_c, data in metrics_cls.items():
-            lbl_id = data.get("label_id", raw_c)
-            table_rows += f"""
-            <tr>
-                <td><strong>{lbl_id}</strong> <span style="color: #6E5C5C;">({raw_c})</span></td>
-                <td class="tabular-number">{data.get('precision', 0) * 100:.1f}%</td>
-                <td class="tabular-number">{data.get('recall', 0) * 100:.1f}%</td>
-                <td class="tabular-number">{data.get('f1_score', 0) * 100:.1f}%</td>
-                <td class="tabular-number" style="font-weight: 800; color: #9E3B3B;">{data.get('mAP_50', 0) * 100:.1f}%</td>
-                <td class="tabular-number">{data.get('instances', 0)}</td>
-            </tr>
-            """
-
-        safe_markdown(
-            f"""
-            <div class="metric-table-container">
-                <table class="metric-table">
-                    <thead>
-                        <tr>
-                            <th>Kategori Kondisi Kulit</th>
-                            <th>Presisi</th>
-                            <th>Recall</th>
-                            <th>F1-Score</th>
-                            <th>mAP@0.5</th>
-                            <th>Sampel Uji</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {table_rows}
-                    </tbody>
-                </table>
-            </div>
-            """
-        )
-
-        with st.expander("Formula evaluasi matematis (Bab 3.5 Proposal)"):
-            st.markdown(
-                textwrap.dedent(
-                    """
-                    Metrik performa dihitung berdasarkan formulasi matematis baku deteksi objek:
-                    - **Intersection over Union (IoU - Persamaan 3.1)**:
-                      $$IoU = \\frac{\\text{Area}(A \\cap B)}{\\text{Area}(A \\cup B)}$$
-                    - **Presisi (Precision - Persamaan 3.5)**:
-                      $$\\text{Precision} = \\frac{TP}{TP + FP}$$
-                    - **Sensitivitas (Recall - Persamaan 3.6)**:
-                      $$\\text{Recall} = \\frac{TP}{TP + FN}$$
-                    - **F1-Score (Persamaan 3.7)**:
-                      $$F1 = 2 \\times \\frac{\\text{Precision} \\times \\text{Recall}}{\\text{Precision} + \\text{Recall}}$$
-                    - **Mean Average Precision (mAP@0.5)**:
-                      $$\\text{mAP} = \\frac{1}{N} \\sum_{i=1}^{N} \\text{AP}_i$$
-                    di mana $N = 5$ kelas kategori lesi kulit.
-                    """
-                ).strip()
-            )
-
-    with col_p2_right:
-        st.markdown("<h3 style='font-size: 1.1rem; font-weight: 700; color: #2B1E1E; margin: 0 0 0.5rem 0;'>Matriks Konfusi Data Uji</h3>", unsafe_allow_html=True)
-        cm_labels = conf_mat.get("labels", [])
-        cm_matrix = conf_mat.get("matrix", [])
-
-        cm_th = "".join([f"<th>{l}</th>" for l in cm_labels])
-        cm_rows = ""
-        for i, row in enumerate(cm_matrix):
-            actual_label = cm_labels[i] if i < len(cm_labels) else f"Kelas {i}"
-            cells = ""
-            for j, val in enumerate(row):
-                is_diagonal = (i == j)
-                bg_style = ' style="background-color: #EBF5EE; font-weight: 800; color: #1F5A37;"' if is_diagonal else ''
-                cells += f'<td class="tabular-number"{bg_style}>{val}</td>'
-            cm_rows += f"<tr><td><strong>{actual_label}</strong></td>{cells}</tr>"
-
-        safe_markdown(
-            f"""
-            <div class="metric-table-container">
-                <table class="metric-table">
-                    <thead>
-                        <tr>
-                            <th>Aktual \\ Prediksi</th>
-                            {cm_th}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {cm_rows}
-                    </tbody>
-                </table>
-            </div>
-            <p style="font-size: 0.76rem; color: #6E5C5C; margin: -0.5rem 0 1rem 0;">Kolom diagonal hijau menunjukkan jumlah prediksi yang diklasifikasikan dengan benar ke kelas aslinya.</p>
-            """
-        )
-
-        splits = dataset_info.get("splits", {})
-        safe_markdown(
-            f"""
-            <div class="about-card" style="margin-top: 0;">
-                <div class="about-card-title">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9E3B3B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="20" x2="18" y2="10"></line>
-                        <line x1="12" y1="20" x2="12" y2="4"></line>
-                        <line x1="6" y1="20" x2="6" y2="14"></line>
-                    </svg>
-                    <span>Distribusi Dataset Penelitian (1.391 Citra)</span>
-                </div>
-                <p class="about-card-body" style="font-size: 0.85rem;">
-                    Model dilatih menggunakan dataset gabungan <strong>External Wound Dataset</strong> (Roboflow Universe &amp; Kaggle) yang dibagi secara proporsional:
-                </p>
-                <div class="dataset-bar-wrap">
-                    <div class="dataset-bar-train" title="Train: 70%"></div>
-                    <div class="dataset-bar-valid" title="Valid: 20%"></div>
-                    <div class="dataset-bar-test" title="Test: 10%"></div>
-                </div>
-                <div style="display: flex; gap: 8px; margin-top: 0.75rem; flex-wrap: wrap;">
-                    <div style="background-color: #FAF6F2; border: 1px solid #E8DDD1; border-radius: 6px; padding: 0.55rem 0.75rem; flex: 1; min-width: 95px;">
-                        <div style="font-size: 0.74rem; color: #6E5C5C;">Latih (Train)</div>
-                        <div class="tabular-number" style="font-size: 1.1rem; font-weight: 800; color: #9E3B3B;">{splits.get('train', 979)} <span style="font-size: 0.78rem; font-weight: 500; color: #6E5C5C;">(70%)</span></div>
-                    </div>
-                    <div style="background-color: #FAF6F2; border: 1px solid #E8DDD1; border-radius: 6px; padding: 0.55rem 0.75rem; flex: 1; min-width: 95px;">
-                        <div style="font-size: 0.74rem; color: #6E5C5C;">Validasi (Valid)</div>
-                        <div class="tabular-number" style="font-size: 1.1rem; font-weight: 800; color: #D99B26;">{splits.get('valid', 275)} <span style="font-size: 0.78rem; font-weight: 500; color: #6E5C5C;">(20%)</span></div>
-                    </div>
-                    <div style="background-color: #FAF6F2; border: 1px solid #E8DDD1; border-radius: 6px; padding: 0.55rem 0.75rem; flex: 1; min-width: 95px;">
-                        <div style="font-size: 0.74rem; color: #6E5C5C;">Uji (Test)</div>
-                        <div class="tabular-number" style="font-size: 1.1rem; font-weight: 800; color: #526B7A;">{splits.get('test', 137)} <span style="font-size: 0.78rem; font-weight: 500; color: #6E5C5C;">(10%)</span></div>
-                    </div>
-                </div>
-            </div>
-            """
-        )
-
-        with st.expander("Cara mengecek metrik mandiri via terminal (CLI)"):
-            st.markdown(
-                textwrap.dedent(
-                    """
-                    Jalankan perintah berikut di PowerShell atau terminal:
-                    ```powershell
-                    python scripts/evaluate.py --model models/wound_yolov8n.pt --data dataset/data.yaml --split test
-                    ```
-                    Skrip tersebut akan memvalidasi seluruh 137 citra uji dan menghasilkan laporan ringkasan mAP@0.5, mAP@0.5:0.95, Precision, Recall, serta F1-Score di konsol.
-                    """
-                ).strip()
-            )
-
-# -----------------------------------------------------------------------------
-# Halaman 3: Tentang Sistem & Atribusi
+# Halaman 2: Tentang Sistem & Atribusi
 # -----------------------------------------------------------------------------
 elif current_page == "Tentang sistem":
     safe_markdown("""
@@ -2099,6 +1896,25 @@ elif current_page == "Tentang sistem":
                 <p class="about-card-body">
                     {APP_CONFIG.get('about', {}).get('dataset_attribution',
                     'Dataset penelitian bersumber dari External Wound Dataset (Roboflow Universe & Kaggle) berjumlah 1.391 citra lesi kulit yang dianotasi ke dalam 5 kelas.')}
+                </p>
+            </div>
+            """
+        )
+
+        safe_markdown(
+            """
+            <div class="about-card">
+                <div class="about-card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9E3B3B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 17 10 11 4 5"></polyline>
+                        <line x1="12" y1="19" x2="20" y2="19"></line>
+                    </svg>
+                    <span>Pemeriksaan Metrik Evaluasi Model (CLI)</span>
+                </div>
+                <p class="about-card-body">
+                    Evaluasi kuantitatif model YOLOv8 (mAP@0.5, presisi, recall, F1-score, kecepatan inferensi, dan matriks konfusi) dapat diperiksa secara mandiri melalui terminal:
+                    <br><br>
+                    <code style="background-color: #FAF2EB; color: #9E3B3B; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">python scripts/check_metrics.py</code>
                 </p>
             </div>
             """
