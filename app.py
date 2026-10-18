@@ -9,7 +9,10 @@ import os
 import io
 import json
 import base64
-import cv2
+try:
+    import cv2
+except (ImportError, Exception):
+    cv2 = None
 import numpy as np
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from PIL import Image

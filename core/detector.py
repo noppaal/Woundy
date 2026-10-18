@@ -10,7 +10,10 @@ serta computer vision fallback detector untuk 5 kelas luka:
 """
 
 import os
-import cv2
+try:
+    import cv2
+except (ImportError, Exception):
+    cv2 = None
 import base64
 import numpy as np
 from PIL import Image
