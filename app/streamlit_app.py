@@ -36,9 +36,11 @@ if PARENT_DIR not in sys.path:
 # Impor mesin inferensi dan aturan
 try:
     from core.detector import WoundONNXDetector
+    from core.evaluator import EvaluationEngine
     from rbs.engine import ForwardChainingEngine
 except ImportError:
     from app.core.detector import WoundONNXDetector
+    from app.core.evaluator import EvaluationEngine
     from app.rbs.engine import ForwardChainingEngine
 
 # -----------------------------------------------------------------------------
@@ -1324,7 +1326,7 @@ safe_markdown(header_html)
 # Navigasi Halaman Utama (Segmented Tab Bar)
 current_page = st.radio(
     label="Pilih menu navigasi",
-    options=["Pemeriksaan luka", "Tentang sistem"],
+    options=["Pemeriksaan luka", "Evaluasi model", "Tentang sistem"],
     index=0,
     horizontal=True,
     label_visibility="collapsed"
@@ -1851,7 +1853,153 @@ if current_page == "Pemeriksaan luka":
     )
 
 # -----------------------------------------------------------------------------
-# Halaman 2: Tentang Sistem & Atribusi
+# Halaman 2: Evaluasi Model (Subbab 3.5) - dibaca dari reports/metrics.json
+# -----------------------------------------------------------------------------
+elif current_page == "Evaluasi model":
+    def _pct(v, d=1):
+        return f"{v * 100:.{d}f}%"
+
+    def _html_table(headers, rows, highlight_diag=False):
+        th = "".join(f"<th>{h}</th>" for h in headers)
+        body = ""
+        for r in rows:
+            tds = ""
+            for j, c in enumerate(r):
+                cls = ' class="tabular-number"' if j > 0 else ""
+                tds += f"<td{cls}>{c}</td>"
+            body += f"<tr>{tds}</tr>"
+        return (f'<div class="metric-table-container"><table class="metric-table"><thead><tr>{th}</tr></thead>'
+                f"<tbody>{body}</tbody></table></div>")
+
+    def _card(label, value, sub=""):
+        return (f'<div class="metric-card"><div class="metric-card-val tabular-number">{value}</div>'
+                f'<div class="metric-card-lbl">{label}</div><div class="metric-card-sub">{sub}</div></div>')
+
+    bench = EvaluationEngine.get_benchmark_report(reload=True)
+    safe_markdown("""
+    <div style="margin: 0.5rem 0 1rem 0;">
+        <h2 style="font-size: 1.45rem; font-weight: 800; color: #2B1E1E; letter-spacing: -0.02em; margin: 0 0 4px 0;">Evaluasi Model YOLOv8 (Subbab 3.5)</h2>
+        <p style="font-size: 0.88rem; color: #6E5C5C; margin: 0;">Seluruh angka dihitung langsung dari model pada dataset, bukan nilai manual</p>
+    </div>
+    """)
+
+    if not bench:
+        st.warning("Hasil evaluasi belum tersedia. Jalankan di terminal: `python scripts/evaluate_full.py` lalu `python scripts/generate_report.py`.")
+    else:
+        evs = bench["evaluations"]
+        meta = bench["meta"]
+        split_options = {"Testing (Data Uji)": "testing", "Validasi": "validasi", "Training (Data Latih, hasil augmentasi)": "training"}
+        split_options = {k: v for k, v in split_options.items() if v in evs}
+        split_label = st.selectbox("Pilih split data", list(split_options.keys()), key="eval_split")
+        ev = evs[split_options[split_label]]
+        ov, pcm, det = ev["metrics_overall"], ev["metrics_per_class"], ev["detection"]
+        cm = ev["confusion_matrix"]
+
+        c1, c2, c3, c4, c5 = st.columns(5)
+        ci = ov["ci95"]
+        c1.markdown(_card("Akurasi citra", _pct(ov["accuracy"]), f"CI95 {_pct(ci['accuracy'][0], 0)}-{_pct(ci['accuracy'][1], 0)}"), unsafe_allow_html=True)
+        c2.markdown(_card("Macro F1", _pct(ov["f1_macro"]), f"CI95 {_pct(ci['f1_macro'][0], 0)}-{_pct(ci['f1_macro'][1], 0)}"), unsafe_allow_html=True)
+        c3.markdown(_card("mAP@0.5", f"{det['overall']['map50']:.3f}", "tingkat deteksi (box)"), unsafe_allow_html=True)
+        c4.markdown(_card("mAP@0.5:0.95", f"{det['overall']['map50_95']:.3f}", "lokalisasi ketat"), unsafe_allow_html=True)
+        c5.markdown(_card("Jumlah citra", f"{ov['total']}", f"{ov['undetected']} tidak terdeteksi"), unsafe_allow_html=True)
+
+        t_sum, t_cls, t_cm, t_det, t_ana, t_info = st.tabs(
+            ["Ringkasan", "Per kelas", "Matriks konfusi", "Deteksi (mAP)", "Analisis", "Penjelasan metrik"])
+
+        with t_sum:
+            rows = []
+            for key, e in evs.items():
+                o = e["metrics_overall"]; d = e["detection"]["overall"]
+                rows.append([e["split_name"], o["total"], _pct(o["accuracy"]), _pct(o["balanced_accuracy"]), _pct(o["precision_macro"]),
+                             _pct(o["recall_macro"]), _pct(o["f1_macro"]), f"{o['cohen_kappa']:.3f}", f"{o['mcc']:.3f}",
+                             f"{d['map50']:.3f}", f"{d['map50_95']:.3f}"])
+            safe_markdown(_html_table(["Split", "N", "Akurasi", "Bal. Acc", "Presisi (macro)", "Recall (macro)", "F1 (macro)", "Kappa", "MCC", "mAP@0.5", "mAP@0.5:0.95"], rows))
+            st.caption(f"Model: {meta['model']} | threshold citra {meta['conf_threshold']} | IoU NMS {meta['iou_nms']} | dibuat {meta['generated_at']}")
+            ds = bench["dataset"]
+            rem = ds.get("removed_for_leakage") or {}
+            st.info("Split latih berisi citra hasil augmentasi Roboflow (±3x), sehingga metrik training hanya menunjukkan kemampuan menghafal. "
+                    + (f"Sebanyak {rem.get('valid', 0)} citra validasi dan {rem.get('test', 0)} citra uji yang mirip data latih sudah dikeluarkan untuk mencegah kebocoran data." if rem else ""))
+            if "gap" in bench.get("figures", {}) and EvaluationEngine.figure_path("gap"):
+                st.image(EvaluationEngine.figure_path("gap"), use_container_width=True)
+
+        with t_cls:
+            rows = []
+            for c in cm["labels"]:
+                m = pcm[c]
+                rows.append([f"{m['label_id']} ({c})", m["support"], m["tp"], m["fp"], m["fn"], m["tn"], _pct(m["precision"]),
+                             f"{_pct(m['recall'])} <span style='color:#6E5C5C;font-size:0.72rem'>[{_pct(m['recall_ci95'][0], 0)}-{_pct(m['recall_ci95'][1], 0)}]</span>",
+                             _pct(m["specificity"]), _pct(m["f1_score"]), m["missed"]])
+            safe_markdown(_html_table(["Kelas", "Sampel", "TP", "FP", "FN", "TN", "Presisi", "Recall [CI95]", "Spesifisitas", "F1", "Tdk terdeteksi"], rows))
+            st.caption("FN mencakup citra yang salah kelas maupun yang tidak terdeteksi. Recall kelas Luka bakar dan Luka sayat paling kritis secara klinis.")
+            if EvaluationEngine.figure_path("per_class"):
+                st.image(EvaluationEngine.figure_path("per_class"), use_container_width=True)
+
+        with t_cm:
+            cols_cm = cm["columns"]
+            rows = []
+            for i, lab in enumerate(cm["labels"]):
+                row = cm["matrix"][i]
+                cells = [f"<strong style='color:#1F5A37;background:#EBF5EE;display:block'>{v}</strong>" if j == i else str(v) for j, v in enumerate(row)]
+                rows.append([f"<strong>{lab}</strong>"] + cells + [sum(row)])
+            safe_markdown(_html_table(["Aktual \\ Prediksi"] + cols_cm + ["Total"], rows))
+            st.caption("Diagonal hijau = benar. Kolom 'Tidak Terdeteksi' menampung citra yang skornya di bawah threshold.")
+            tc = ev.get("top_confusions") or []
+            if tc:
+                st.markdown("**Pasangan kelas yang paling sering tertukar:**")
+                for x in tc[:4]:
+                    st.markdown(f"- {x['actual']} dikira {x['predicted']}: **{x['count']} citra** ({_pct(x['rate_of_actual'])} dari kelas aktual)")
+            split_key = {"testing": "cm_test", "validasi": "cm_valid", "training": "cm_train"}[split_options[split_label]]
+            if EvaluationEngine.figure_path(split_key):
+                st.image(EvaluationEngine.figure_path(split_key), use_container_width=True)
+
+        with t_det:
+            rows = []
+            for c, m in det["per_class"].items():
+                rows.append([c, m["n_gt"], f"{m['precision']:.3f}", f"{m['recall']:.3f}", f"{m['ap50']:.3f}", f"{m['ap75']:.3f}", f"{m['ap50_95']:.3f}"])
+            o = det["overall"]
+            rows.append(["<strong>Semua kelas</strong>", "", f"<strong>{o['precision']:.3f}</strong>", f"<strong>{o['recall']:.3f}</strong>",
+                         f"<strong>{o['map50']:.3f}</strong>", f"<strong>{o['map75']:.3f}</strong>", f"<strong>{o['map50_95']:.3f}</strong>"])
+            safe_markdown(_html_table(["Kelas", "Box GT", "Presisi", "Recall", "AP@0.5", "AP@0.75", "AP@0.5:0.95"], rows))
+            st.caption("Presisi/Recall pada threshold aplikasi dan IoU 0.5. AP dihitung dengan interpolasi 101 titik (konvensi COCO/Ultralytics).")
+            if EvaluationEngine.figure_path("pr"):
+                st.image(EvaluationEngine.figure_path("pr"), width=520)
+
+        with t_ana:
+            st.markdown("**Pemilihan threshold keyakinan (data uji)**")
+            if EvaluationEngine.figure_path("sweep"):
+                st.image(EvaluationEngine.figure_path("sweep"), use_container_width=True)
+            st.markdown("**Kurva training**")
+            if EvaluationEngine.figure_path("training"):
+                st.image(EvaluationEngine.figure_path("training"), use_container_width=True)
+            st.markdown("**Contoh citra uji yang salah klasifikasi**")
+            if EvaluationEngine.figure_path("misclassified"):
+                st.image(EvaluationEngine.figure_path("misclassified"), use_container_width=True)
+            tm = bench.get("timing", {})
+            if tm:
+                st.markdown(f"**Kecepatan inferensi (CPU, terukur):** {tm['total_ms']:.1f} ms per citra (±{tm['fps']:.1f} FPS), "
+                            f"inferensi ONNX {tm['infer_ms']:.1f} ms.")
+
+        with t_info:
+            st.markdown(textwrap.dedent("""
+                **Definisi (one-vs-rest, contoh kelas Luka sayat):**
+                - **TP**: luka sayat diprediksi luka sayat. **FP**: bukan luka sayat tetapi diprediksi luka sayat.
+                - **FN**: luka sayat tidak diprediksi luka sayat (salah kelas atau tidak terdeteksi). **TN**: bukan luka sayat dan tidak diprediksi luka sayat.
+
+                **Rumus:**
+                $$\\text{Presisi}=\\frac{TP}{TP+FP}\\quad \\text{Recall}=\\frac{TP}{TP+FN}\\quad \\text{Spesifisitas}=\\frac{TN}{TN+FP}$$
+                $$F1=\\frac{2\\cdot P\\cdot R}{P+R}\\quad IoU=\\frac{|A\\cap B|}{|A\\cup B|}\\quad mAP=\\frac{1}{N}\\sum_{i=1}^{N}AP_i$$
+
+                - **Akurasi citra** menjawab: apakah kelas luka pada foto benar? Ini yang menentukan aturan P3K (R001-R005).
+                - **mAP** menilai lokasi sekaligus kelas kotak deteksi; **mAP@0.5:0.95** merata-rata IoU 0.50 sampai 0.95 sehingga jauh lebih ketat.
+                - **Macro** = rata-rata sederhana antar kelas; **Weighted** = berbobot jumlah sampel; **Kappa/MCC** = kesepakatan di atas kebetulan.
+                - **CI95** = interval kepercayaan 95% (bootstrap/Wilson). Data uji kecil sehingga rentangnya lebar.
+
+                Laporan lengkap dengan contoh perhitungan: `reports/LAPORAN_EVALUASI.md`.
+                Jalankan ulang evaluasi: `python scripts/evaluate_full.py` lalu `python scripts/generate_report.py`.
+            """))
+
+# -----------------------------------------------------------------------------
+# Halaman 3: Tentang Sistem & Atribusi
 # -----------------------------------------------------------------------------
 elif current_page == "Tentang sistem":
     safe_markdown("""

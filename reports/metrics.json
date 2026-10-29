@@ -1,0 +1,1852 @@
+{
+  "meta": {
+    "generated_at": "2026-10-29T17:33:08",
+    "model": "models\\wound_yolov8n.onnx",
+    "conf_threshold": 0.35,
+    "iou_nms": 0.45,
+    "image_truth_rule": "kelas dominan (jumlah box terbanyak) pada label citra",
+    "image_pred_rule": "kelas box skor tertinggi bila skor >= threshold, selain itu 'Tidak Terdeteksi'",
+    "device": "Intel64 Family 6 Model 126 Stepping 5, GenuineIntel",
+    "platform": "Windows 11 / Python 3.12.10",
+    "training_run": "runs\\detect\\runs\\train\\wound_yolov8-4"
+  },
+  "dataset": {
+    "class_names": [
+      "Abrasions",
+      "Bruise",
+      "Burn",
+      "Cut",
+      "No Abnormality"
+    ],
+    "class_names_id": [
+      "Luka lecet",
+      "Luka memar",
+      "Luka bakar",
+      "Luka sayat",
+      "Kulit normal"
+    ],
+    "splits": {
+      "train": 2934,
+      "valid": 236,
+      "test": 118
+    },
+    "image_class_counts": {
+      "train": {
+        "Burn": 657,
+        "Cut": 534,
+        "No Abnormality": 405,
+        "Bruise": 693,
+        "Abrasions": 639
+      },
+      "valid": {
+        "Burn": 50,
+        "Bruise": 55,
+        "No Abnormality": 29,
+        "Cut": 47,
+        "Abrasions": 55
+      },
+      "test": {
+        "Burn": 24,
+        "No Abnormality": 16,
+        "Bruise": 26,
+        "Cut": 21,
+        "Abrasions": 31
+      }
+    },
+    "removed_for_leakage": {
+      "valid": 38,
+      "test": 19
+    },
+    "note_train": "Split train berisi citra hasil augmentasi Roboflow (±3x citra asli)."
+  },
+  "timing": {
+    "reference_split": "test",
+    "pre_ms": 9.635766101706333,
+    "infer_ms": 170.35875762710435,
+    "post_ms": 2.8592661016919934,
+    "total_ms": 182.8537898305027,
+    "infer_ms_median": 163.66139999990992,
+    "infer_ms_p95": 210.25740500022033,
+    "fps": 5.4688502815662465,
+    "per_split": {
+      "train": {
+        "pre_ms": 13.043731629182206,
+        "infer_ms": 208.31836417858773,
+        "post_ms": 3.461460020453972,
+        "total_ms": 224.82355582822393,
+        "infer_ms_median": 179.89310000007208,
+        "infer_ms_p95": 364.57136999997584,
+        "fps": 4.447932496735566
+      },
+      "valid": {
+        "pre_ms": 10.193578389836317,
+        "infer_ms": 177.66340635592633,
+        "post_ms": 3.1390762711796123,
+        "total_ms": 190.99606101694224,
+        "infer_ms_median": 165.08250000015323,
+        "infer_ms_p95": 263.17710000012084,
+        "fps": 5.235710070017074
+      },
+      "test": {
+        "pre_ms": 9.635766101706333,
+        "infer_ms": 170.35875762710435,
+        "post_ms": 2.8592661016919934,
+        "total_ms": 182.8537898305027,
+        "infer_ms_median": 163.66139999990992,
+        "infer_ms_p95": 210.25740500022033,
+        "fps": 5.4688502815662465
+      }
+    }
+  },
+  "evaluations": {
+    "training": {
+      "name": "Matrix Evaluasi (Training)",
+      "split_name": "Training (Data Latih)",
+      "total_images": 2934,
+      "images_without_label": 6,
+      "confusion_matrix": {
+        "labels": [
+          "Abrasions",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "No Abnormality"
+        ],
+        "labels_id": [
+          "Luka lecet",
+          "Luka memar",
+          "Luka bakar",
+          "Luka sayat",
+          "Kulit normal"
+        ],
+        "labels_abbr": [
+          "Abras",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "Normal"
+        ],
+        "columns": [
+          "Abrasions",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "No Abnormality",
+          "Tidak Terdeteksi"
+        ],
+        "matrix": [
+          [
+            632,
+            1,
+            3,
+            1,
+            0,
+            2
+          ],
+          [
+            0,
+            693,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            653,
+            1,
+            0,
+            2
+          ],
+          [
+            0,
+            0,
+            0,
+            527,
+            1,
+            6
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            401,
+            3
+          ]
+        ]
+      },
+      "metrics_overall": {
+        "total": 2928,
+        "correct": 2906,
+        "undetected": 13,
+        "accuracy": 0.9924863387978142,
+        "balanced_accuracy": 0.9921963648708058,
+        "precision_macro": 0.9967611267867509,
+        "recall_macro": 0.9921963648708058,
+        "f1_macro": 0.9944678010359151,
+        "specificity_macro": 0.9992311851948552,
+        "precision_weighted": 0.9969174993703113,
+        "recall_weighted": 0.9924863387978142,
+        "f1_weighted": 0.9946908721648269,
+        "precision_micro": 0.9969125214408233,
+        "recall_micro": 0.9924863387978142,
+        "cohen_kappa": 0.9905419635762232,
+        "mcc": 0.9905604355275167,
+        "ci95": {
+          "accuracy": [
+            0.9890710382513661,
+            0.9955601092896175
+          ],
+          "f1_macro": [
+            0.9918940494452797,
+            0.9967130249534287
+          ]
+        }
+      },
+      "metrics_per_class": {
+        "Abrasions": {
+          "tp": 632,
+          "fp": 0,
+          "fn": 7,
+          "tn": 2289,
+          "precision": 1.0,
+          "recall": 0.9890453834115805,
+          "specificity": 1.0,
+          "npv": 0.9969512195121951,
+          "f1_score": 0.9944925255704169,
+          "accuracy_ovr": 0.9976092896174863,
+          "support": 639,
+          "missed": 2,
+          "recall_ci95": [
+            0.9775619998490033,
+            0.9946837291143991
+          ],
+          "precision_ci95": [
+            0.9939582436883652,
+            1.0
+          ],
+          "label_id": "Luka lecet"
+        },
+        "Bruise": {
+          "tp": 693,
+          "fp": 2,
+          "fn": 1,
+          "tn": 2232,
+          "precision": 0.9971223021582734,
+          "recall": 0.9985590778097982,
+          "specificity": 0.999104744852283,
+          "npv": 0.999552171965965,
+          "f1_score": 0.9978401727861772,
+          "accuracy_ovr": 0.9989754098360656,
+          "support": 694,
+          "missed": 0,
+          "recall_ci95": [
+            0.9918834428075103,
+            0.9997456030963163
+          ],
+          "precision_ci95": [
+            0.9895686524409223,
+            0.9992104929333657
+          ],
+          "label_id": "Luka memar"
+        },
+        "Burn": {
+          "tp": 653,
+          "fp": 3,
+          "fn": 4,
+          "tn": 2268,
+          "precision": 0.9954268292682927,
+          "recall": 0.9939117199391172,
+          "specificity": 0.9986789960369881,
+          "npv": 0.9982394366197183,
+          "f1_score": 0.9946686976389948,
+          "accuracy_ovr": 0.9976092896174863,
+          "support": 657,
+          "missed": 2,
+          "recall_ci95": [
+            0.9844510782292958,
+            0.9976299529890779
+          ],
+          "precision_ci95": [
+            0.9866413609146695,
+            0.9984435443110696
+          ],
+          "label_id": "Luka bakar"
+        },
+        "Cut": {
+          "tp": 527,
+          "fp": 2,
+          "fn": 7,
+          "tn": 2392,
+          "precision": 0.996219281663516,
+          "recall": 0.9868913857677902,
+          "specificity": 0.9991645781119465,
+          "npv": 0.9970821175489787,
+          "f1_score": 0.9915333960489181,
+          "accuracy_ovr": 0.9969262295081968,
+          "support": 534,
+          "missed": 6,
+          "recall_ci95": [
+            0.9731913359668837,
+            0.9936360719539613
+          ],
+          "precision_ci95": [
+            0.9863208319623571,
+            0.9989625993613234
+          ],
+          "label_id": "Luka sayat"
+        },
+        "No Abnormality": {
+          "tp": 401,
+          "fp": 2,
+          "fn": 3,
+          "tn": 2522,
+          "precision": 0.9950372208436724,
+          "recall": 0.9925742574257426,
+          "specificity": 0.9992076069730587,
+          "npv": 0.9988118811881188,
+          "f1_score": 0.9938042131350682,
+          "accuracy_ovr": 0.9982923497267759,
+          "support": 404,
+          "missed": 3,
+          "recall_ci95": [
+            0.9783975887063089,
+            0.9974714741847744
+          ],
+          "precision_ci95": [
+            0.9820876693866895,
+            0.9986379987849036
+          ],
+          "label_id": "Kulit normal"
+        }
+      },
+      "top_confusions": [
+        {
+          "actual": "Abrasions",
+          "predicted": "Burn",
+          "count": 3,
+          "rate_of_actual": 0.004694835680751174
+        },
+        {
+          "actual": "Abrasions",
+          "predicted": "Bruise",
+          "count": 1,
+          "rate_of_actual": 0.001564945226917058
+        },
+        {
+          "actual": "Abrasions",
+          "predicted": "Cut",
+          "count": 1,
+          "rate_of_actual": 0.001564945226917058
+        },
+        {
+          "actual": "Bruise",
+          "predicted": "No Abnormality",
+          "count": 1,
+          "rate_of_actual": 0.001440922190201729
+        },
+        {
+          "actual": "Burn",
+          "predicted": "Bruise",
+          "count": 1,
+          "rate_of_actual": 0.0015220700152207
+        }
+      ],
+      "detection": {
+        "overall": {
+          "map50": 0.9739515457692824,
+          "map75": 0.8371430157728408,
+          "map50_95": 0.7021145579451282,
+          "precision": 0.92575574532569,
+          "recall": 0.9355379494782177,
+          "f1": 0.9306211417547611
+        },
+        "per_class": {
+          "Abrasions": {
+            "n_gt": 831,
+            "n_pred": 4365,
+            "tp": 801,
+            "fp": 63,
+            "fn": 30,
+            "precision": 0.9270833333333334,
+            "recall": 0.9638989169675091,
+            "ap50": 0.9854852359436749,
+            "ap50_95": 0.711007131351429,
+            "ap75": 0.8777485711043516
+          },
+          "Bruise": {
+            "n_gt": 876,
+            "n_pred": 4158,
+            "tp": 852,
+            "fp": 52,
+            "fn": 24,
+            "precision": 0.9424778761061947,
+            "recall": 0.9726027397260274,
+            "ap50": 0.9867167586751985,
+            "ap50_95": 0.7139278366112608,
+            "ap75": 0.878991128526729
+          },
+          "Burn": {
+            "n_gt": 1020,
+            "n_pred": 7848,
+            "tp": 929,
+            "fp": 82,
+            "fn": 91,
+            "precision": 0.9188921859545005,
+            "recall": 0.9107843137254902,
+            "ap50": 0.9686070933755755,
+            "ap50_95": 0.6798033937341874,
+            "ap75": 0.8127366089022559
+          },
+          "Cut": {
+            "n_gt": 597,
+            "n_pred": 2568,
+            "tp": 573,
+            "fp": 32,
+            "fn": 24,
+            "precision": 0.947107438016529,
+            "recall": 0.9597989949748744,
+            "ap50": 0.9843541214097608,
+            "ap50_95": 0.7104459173621901,
+            "ap75": 0.8809461738653755
+          },
+          "No Abnormality": {
+            "n_gt": 711,
+            "n_pred": 8949,
+            "tp": 619,
+            "fp": 74,
+            "fn": 92,
+            "precision": 0.8932178932178932,
+            "recall": 0.870604781997187,
+            "ap50": 0.9445945194422032,
+            "ap50_95": 0.6953885106665738,
+            "ap75": 0.7352925964654916
+          }
+        }
+      },
+      "misclassified": [
+        {
+          "file": "-42_jpg.rf.00fced1d82508a1e0172521a4c8bc6b6.jpg",
+          "true": "Burn",
+          "pred": "Cut",
+          "score": 0.6105284094810486,
+          "top_class": "Cut"
+        },
+        {
+          "file": "-75_jpg.rf.96c7436d6eaae9730292f862e9069d42.jpg",
+          "true": "Burn",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.33469414710998535,
+          "top_class": "Burn"
+        },
+        {
+          "file": "0236_jpg.rf.7fb1af2770d978b3c4be72f8a32e91d6.jpg",
+          "true": "Burn",
+          "pred": "Bruise",
+          "score": 0.7674094438552856,
+          "top_class": "Bruise"
+        },
+        {
+          "file": "0321_jpg.rf.76a89589da17000560a7eccda10fea00.jpg",
+          "true": "Bruise",
+          "pred": "No Abnormality",
+          "score": 0.8388835787773132,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "130_jpg.rf.0f49d12c2ba28352143e13c9a17c756a.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.3291870951652527,
+          "top_class": "Cut"
+        },
+        {
+          "file": "137_jpg.rf.e187bcc0635528b3d1f451e312c6a105.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.3477317690849304,
+          "top_class": "Cut"
+        },
+        {
+          "file": "178_jpg.rf.6e101f895ce71ad64b353cc2858bad24.jpg",
+          "true": "Abrasions",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.3008027672767639,
+          "top_class": "Abrasions"
+        },
+        {
+          "file": "1e0615c6-590b-40d6-96d5-f25255400244_png.rf.93bd257b48e6461080bacce418fcf475.jpg",
+          "true": "Burn",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.27418261766433716,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "214_jpg.rf.32078398ced27062408c658ffa6feba4.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.2934451103210449,
+          "top_class": "Cut"
+        },
+        {
+          "file": "214_jpg.rf.db8b0b769a25b48d68c1c84f61930c2d.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.29668721556663513,
+          "top_class": "Cut"
+        },
+        {
+          "file": "233_jpg.rf.ca2cb7c58c5f5c3728961006feda9cff.jpg",
+          "true": "Abrasions",
+          "pred": "Burn",
+          "score": 0.6123156547546387,
+          "top_class": "Burn"
+        },
+        {
+          "file": "243_jpg.rf.ff0d9d7c342f6eb15d673f4836ce62db.jpg",
+          "true": "Abrasions",
+          "pred": "Bruise",
+          "score": 0.6672636270523071,
+          "top_class": "Bruise"
+        },
+        {
+          "file": "282_jpg.rf.5ab129119575667db71cac297fa5d8dd.jpg",
+          "true": "Abrasions",
+          "pred": "Cut",
+          "score": 0.703370213508606,
+          "top_class": "Cut"
+        },
+        {
+          "file": "292_jpg.rf.9df9ac0fb9b710bc1b0cbef7514ebf2a.jpg",
+          "true": "Abrasions",
+          "pred": "Burn",
+          "score": 0.5443974137306213,
+          "top_class": "Burn"
+        },
+        {
+          "file": "88_jpg.rf.bd7011a157f8c5e9f33b101dd2791b6e.jpg",
+          "true": "No Abnormality",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.320488303899765,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "88_jpg.rf.de32f792c4e85d89390c18f3f9a3ce09.jpg",
+          "true": "No Abnormality",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.32577019929885864,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "89_jpg.rf.09cba182df00729cd8ead46a3c7226a3.jpg",
+          "true": "No Abnormality",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.11772456765174866,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "C373438667FEAA36AB2578630C838DB362F21FA8_size40_w1000_h666_jpeg.rf.9219e2817705644e437aa6c5ebb1c7e5.jpg",
+          "true": "Cut",
+          "pred": "No Abnormality",
+          "score": 0.8351846933364868,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "abrasions-85-_jpg.rf.2536f10f625ae022a3ef2c728139058d.jpg",
+          "true": "Abrasions",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.2971931993961334,
+          "top_class": "Abrasions"
+        },
+        {
+          "file": "mirrored_abrasions-64-_jpg.rf.e7ebef345d1247901542289269bfa588.jpg",
+          "true": "Abrasions",
+          "pred": "Burn",
+          "score": 0.7888429164886475,
+          "top_class": "Burn"
+        },
+        {
+          "file": "ok-c_jpg.rf.c4da8052e356b23ef1bff71905dce27a.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.131676584482193,
+          "top_class": "Burn"
+        },
+        {
+          "file": "uho_news_045741_jpg.rf.5a7bd366cd55fb9a65ed284883782ac2.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.2903839349746704,
+          "top_class": "Burn"
+        }
+      ]
+    },
+    "validasi": {
+      "name": "Matrix Evaluasi (Validasi)",
+      "split_name": "Validasi",
+      "total_images": 236,
+      "images_without_label": 0,
+      "confusion_matrix": {
+        "labels": [
+          "Abrasions",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "No Abnormality"
+        ],
+        "labels_id": [
+          "Luka lecet",
+          "Luka memar",
+          "Luka bakar",
+          "Luka sayat",
+          "Kulit normal"
+        ],
+        "labels_abbr": [
+          "Abras",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "Normal"
+        ],
+        "columns": [
+          "Abrasions",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "No Abnormality",
+          "Tidak Terdeteksi"
+        ],
+        "matrix": [
+          [
+            49,
+            0,
+            2,
+            2,
+            0,
+            2
+          ],
+          [
+            1,
+            49,
+            2,
+            0,
+            2,
+            1
+          ],
+          [
+            2,
+            1,
+            39,
+            1,
+            1,
+            6
+          ],
+          [
+            0,
+            0,
+            0,
+            44,
+            0,
+            3
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+            28,
+            0
+          ]
+        ]
+      },
+      "metrics_overall": {
+        "total": 236,
+        "correct": 209,
+        "undetected": 12,
+        "accuracy": 0.885593220338983,
+        "balanced_accuracy": 0.8927011271926899,
+        "precision_macro": 0.9298929538873597,
+        "recall_macro": 0.8927011271926899,
+        "f1_macro": 0.9097258751745455,
+        "specificity_macro": 0.9841009089534889,
+        "precision_weighted": 0.9331035844416277,
+        "recall_weighted": 0.885593220338983,
+        "f1_weighted": 0.9077332157504615,
+        "precision_micro": 0.9330357142857143,
+        "recall_micro": 0.885593220338983,
+        "cohen_kappa": 0.8576820851852679,
+        "mcc": 0.8598827649858832,
+        "ci95": {
+          "accuracy": [
+            0.8432203389830508,
+            0.9279661016949152
+          ],
+          "f1_macro": [
+            0.8727337446373163,
+            0.9456790526252434
+          ]
+        }
+      },
+      "metrics_per_class": {
+        "Abrasions": {
+          "tp": 49,
+          "fp": 3,
+          "fn": 6,
+          "tn": 178,
+          "precision": 0.9423076923076923,
+          "recall": 0.8909090909090909,
+          "specificity": 0.9834254143646409,
+          "npv": 0.967391304347826,
+          "f1_score": 0.9158878504672897,
+          "accuracy_ovr": 0.961864406779661,
+          "support": 55,
+          "missed": 2,
+          "recall_ci95": [
+            0.7817420620476804,
+            0.9490334437169486
+          ],
+          "precision_ci95": [
+            0.8435724442484082,
+            0.9801861873094267
+          ],
+          "label_id": "Luka lecet"
+        },
+        "Bruise": {
+          "tp": 49,
+          "fp": 2,
+          "fn": 6,
+          "tn": 179,
+          "precision": 0.9607843137254902,
+          "recall": 0.8909090909090909,
+          "specificity": 0.988950276243094,
+          "npv": 0.9675675675675676,
+          "f1_score": 0.9245283018867925,
+          "accuracy_ovr": 0.9661016949152542,
+          "support": 55,
+          "missed": 1,
+          "recall_ci95": [
+            0.7817420620476804,
+            0.9490334437169486
+          ],
+          "precision_ci95": [
+            0.8678345101373474,
+            0.9891791437312488
+          ],
+          "label_id": "Luka memar"
+        },
+        "Burn": {
+          "tp": 39,
+          "fp": 4,
+          "fn": 11,
+          "tn": 182,
+          "precision": 0.9069767441860465,
+          "recall": 0.78,
+          "specificity": 0.978494623655914,
+          "npv": 0.9430051813471503,
+          "f1_score": 0.8387096774193548,
+          "accuracy_ovr": 0.9364406779661016,
+          "support": 50,
+          "missed": 6,
+          "recall_ci95": [
+            0.6475818431054045,
+            0.8724621377569771
+          ],
+          "precision_ci95": [
+            0.7839701160146731,
+            0.9632289548966534
+          ],
+          "label_id": "Luka bakar"
+        },
+        "Cut": {
+          "tp": 44,
+          "fp": 3,
+          "fn": 3,
+          "tn": 186,
+          "precision": 0.9361702127659575,
+          "recall": 0.9361702127659575,
+          "specificity": 0.9841269841269841,
+          "npv": 0.9841269841269841,
+          "f1_score": 0.9361702127659575,
+          "accuracy_ovr": 0.9745762711864406,
+          "support": 47,
+          "missed": 3,
+          "recall_ci95": [
+            0.828371220656221,
+            0.9780550129792271
+          ],
+          "precision_ci95": [
+            0.828371220656221,
+            0.9780550129792271
+          ],
+          "label_id": "Luka sayat"
+        },
+        "No Abnormality": {
+          "tp": 28,
+          "fp": 3,
+          "fn": 1,
+          "tn": 204,
+          "precision": 0.9032258064516129,
+          "recall": 0.9655172413793104,
+          "specificity": 0.9855072463768116,
+          "npv": 0.9951219512195122,
+          "f1_score": 0.9333333333333333,
+          "accuracy_ovr": 0.9830508474576272,
+          "support": 29,
+          "missed": 0,
+          "recall_ci95": [
+            0.8282410893529976,
+            0.9938869433859677
+          ],
+          "precision_ci95": [
+            0.7509971000182295,
+            0.966535963905356
+          ],
+          "label_id": "Kulit normal"
+        }
+      },
+      "top_confusions": [
+        {
+          "actual": "Abrasions",
+          "predicted": "Burn",
+          "count": 2,
+          "rate_of_actual": 0.03636363636363636
+        },
+        {
+          "actual": "Abrasions",
+          "predicted": "Cut",
+          "count": 2,
+          "rate_of_actual": 0.03636363636363636
+        },
+        {
+          "actual": "Bruise",
+          "predicted": "Burn",
+          "count": 2,
+          "rate_of_actual": 0.03636363636363636
+        },
+        {
+          "actual": "Bruise",
+          "predicted": "No Abnormality",
+          "count": 2,
+          "rate_of_actual": 0.03636363636363636
+        },
+        {
+          "actual": "Burn",
+          "predicted": "Abrasions",
+          "count": 2,
+          "rate_of_actual": 0.04
+        }
+      ],
+      "detection": {
+        "overall": {
+          "map50": 0.7214125694044495,
+          "map75": 0.4277684324463621,
+          "map50_95": 0.40532329741929374,
+          "precision": 0.7019584234545906,
+          "recall": 0.6708291916161164,
+          "f1": 0.6860408654399356
+        },
+        "per_class": {
+          "Abrasions": {
+            "n_gt": 69,
+            "n_pred": 381,
+            "tp": 55,
+            "fp": 11,
+            "fn": 14,
+            "precision": 0.8333333333333334,
+            "recall": 0.7971014492753623,
+            "ap50": 0.8376402373647478,
+            "ap50_95": 0.4981035445306059,
+            "ap75": 0.574619762974014
+          },
+          "Bruise": {
+            "n_gt": 76,
+            "n_pred": 337,
+            "tp": 56,
+            "fp": 16,
+            "fn": 20,
+            "precision": 0.7777777777777778,
+            "recall": 0.7368421052631579,
+            "ap50": 0.8271706972259993,
+            "ap50_95": 0.4302752571127676,
+            "ap75": 0.43002028057483244
+          },
+          "Burn": {
+            "n_gt": 93,
+            "n_pred": 816,
+            "tp": 37,
+            "fp": 24,
+            "fn": 56,
+            "precision": 0.6065573770491803,
+            "recall": 0.3978494623655914,
+            "ap50": 0.4790039799796338,
+            "ap50_95": 0.21652750202465493,
+            "ap75": 0.1780138454349511
+          },
+          "Cut": {
+            "n_gt": 51,
+            "n_pred": 276,
+            "tp": 45,
+            "fp": 14,
+            "fn": 6,
+            "precision": 0.7627118644067796,
+            "recall": 0.8823529411764706,
+            "ap50": 0.9002008423668475,
+            "ap50_95": 0.5083450651580061,
+            "ap75": 0.6045559847436511
+          },
+          "No Abnormality": {
+            "n_gt": 50,
+            "n_pred": 823,
+            "tp": 27,
+            "fp": 24,
+            "fn": 23,
+            "precision": 0.5294117647058824,
+            "recall": 0.54,
+            "ap50": 0.5630470900850194,
+            "ap50_95": 0.3733651182704339,
+            "ap75": 0.3516322885043619
+          }
+        }
+      },
+      "misclassified": [
+        {
+          "file": "-40_jpg.rf.7404ac8f2ad8b815c72ff675710e5718.jpg",
+          "true": "Burn",
+          "pred": "Abrasions",
+          "score": 0.5923529863357544,
+          "top_class": "Abrasions"
+        },
+        {
+          "file": "-66_jpg.rf.f8d648ff722fd46b55b512610e622735.jpg",
+          "true": "Burn",
+          "pred": "Cut",
+          "score": 0.538342297077179,
+          "top_class": "Cut"
+        },
+        {
+          "file": "-87_jpg.rf.59a8f47834a77eb79d0aa4ed987335da.jpg",
+          "true": "Burn",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.3019940257072449,
+          "top_class": "Burn"
+        },
+        {
+          "file": "0012_jpg.rf.319b471e64f94405e1faa3227a37e070.jpg",
+          "true": "Burn",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.3490351736545563,
+          "top_class": "Burn"
+        },
+        {
+          "file": "0054_jpg.rf.bb899d2ef033d10cb807f071c8126f23.jpg",
+          "true": "Burn",
+          "pred": "Abrasions",
+          "score": 0.38840383291244507,
+          "top_class": "Abrasions"
+        },
+        {
+          "file": "0102_jpg.rf.61bcae8a96b2c52a0a0abb5a833e6685.jpg",
+          "true": "Burn",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.15577632188796997,
+          "top_class": "Cut"
+        },
+        {
+          "file": "0195_jpg.rf.710c400ff4ade799d70dff575d608cef.jpg",
+          "true": "Burn",
+          "pred": "No Abnormality",
+          "score": 0.604240894317627,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "0232_jpg.rf.9a187611492f68e5e3b2c67bd32a0f4b.jpg",
+          "true": "Burn",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.2094663679599762,
+          "top_class": "Burn"
+        },
+        {
+          "file": "0249_jpg.rf.d6fa1cf124b7dd1eb48ebfce60f852a6.jpg",
+          "true": "Burn",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.3371305465698242,
+          "top_class": "Bruise"
+        },
+        {
+          "file": "0316_jpg.rf.945a1b86354d0847ecb87083868072df.jpg",
+          "true": "Burn",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.3225787281990051,
+          "top_class": "Burn"
+        },
+        {
+          "file": "142_jpg.rf.cc61c208087c5935d88291e6e5aa4355.jpg",
+          "true": "Abrasions",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.33290165662765503,
+          "top_class": "Abrasions"
+        },
+        {
+          "file": "202_jpg.rf.f2f1b5a17136a59752db01718efb4c1b.jpg",
+          "true": "Abrasions",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.04111635684967041,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "203_jpg.rf.86e407429b6fc4b9d423e7b38467552b.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.21288210153579712,
+          "top_class": "Burn"
+        },
+        {
+          "file": "221_jpg.rf.bdf9e79e64ccbbcb0ebe6825728e6817.jpg",
+          "true": "Bruise",
+          "pred": "Burn",
+          "score": 0.3931707739830017,
+          "top_class": "Burn"
+        },
+        {
+          "file": "223_jpg.rf.67816819bc009e58bb6217f0772f372c.jpg",
+          "true": "Bruise",
+          "pred": "Abrasions",
+          "score": 0.7318552732467651,
+          "top_class": "Abrasions"
+        },
+        {
+          "file": "240_jpg.rf.7893cda58815bb336d9d3c1f5df711d2.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.27915459871292114,
+          "top_class": "Cut"
+        },
+        {
+          "file": "273_jpg.rf.6fa0c86f53848c7b6195773d2a40fdda.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.1830900013446808,
+          "top_class": "Cut"
+        },
+        {
+          "file": "274_jpg.rf.5cdf5027c61ae0c1cebb0e67c08467a0.jpg",
+          "true": "Abrasions",
+          "pred": "Burn",
+          "score": 0.8563598394393921,
+          "top_class": "Burn"
+        },
+        {
+          "file": "327_jpg.rf.0dacfcaf7cfa80f5538e49abf243996f.jpg",
+          "true": "Bruise",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.2984790802001953,
+          "top_class": "Abrasions"
+        },
+        {
+          "file": "328_jpg.rf.cf2c268faf9ff73122dc64e7708e78c9.jpg",
+          "true": "Bruise",
+          "pred": "No Abnormality",
+          "score": 0.4688912034034729,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "344_jpg.rf.8fd3ccc8708d6c588bdde1b171cb6962.jpg",
+          "true": "Abrasions",
+          "pred": "Burn",
+          "score": 0.6293474435806274,
+          "top_class": "Burn"
+        },
+        {
+          "file": "43_jpg.rf.db8e18eb28cc3c3199b00f9ba99d2f50.jpg",
+          "true": "Bruise",
+          "pred": "Burn",
+          "score": 0.47374388575553894,
+          "top_class": "Burn"
+        },
+        {
+          "file": "86_jpg.rf.8b4c977e0a2bfeac972884b8c8eaaf46.jpg",
+          "true": "Bruise",
+          "pred": "No Abnormality",
+          "score": 0.6158122420310974,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "S__78331910_0_jpg.rf.c1f4198fdd11412fc2fbf4ae3263528f.jpg",
+          "true": "No Abnormality",
+          "pred": "Bruise",
+          "score": 0.8001328706741333,
+          "top_class": "Bruise"
+        },
+        {
+          "file": "abrasions-28-_jpg.rf.282c84fb3f13daa015c54c754d05a754.jpg",
+          "true": "Abrasions",
+          "pred": "Cut",
+          "score": 0.7673530578613281,
+          "top_class": "Cut"
+        },
+        {
+          "file": "abrasions-31-_jpg.rf.ee87bbeaf420ae10110f62f6241e9bf2.jpg",
+          "true": "Abrasions",
+          "pred": "Cut",
+          "score": 0.796718180179596,
+          "top_class": "Cut"
+        },
+        {
+          "file": "burns-55-_jpg.rf.dc734c5dd375345c5fb09cd5d6e9bb45.jpg",
+          "true": "Burn",
+          "pred": "Bruise",
+          "score": 0.4674757421016693,
+          "top_class": "Bruise"
+        }
+      ]
+    },
+    "testing": {
+      "name": "Matrix Evaluasi (Testing)",
+      "split_name": "Testing (Data Uji)",
+      "total_images": 118,
+      "images_without_label": 0,
+      "confusion_matrix": {
+        "labels": [
+          "Abrasions",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "No Abnormality"
+        ],
+        "labels_id": [
+          "Luka lecet",
+          "Luka memar",
+          "Luka bakar",
+          "Luka sayat",
+          "Kulit normal"
+        ],
+        "labels_abbr": [
+          "Abras",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "Normal"
+        ],
+        "columns": [
+          "Abrasions",
+          "Bruise",
+          "Burn",
+          "Cut",
+          "No Abnormality",
+          "Tidak Terdeteksi"
+        ],
+        "matrix": [
+          [
+            27,
+            2,
+            0,
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            26,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            21,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            18,
+            0,
+            3
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+            15,
+            0
+          ]
+        ]
+      },
+      "metrics_overall": {
+        "total": 118,
+        "correct": 107,
+        "undetected": 3,
+        "accuracy": 0.9067796610169492,
+        "balanced_accuracy": 0.9081221198156684,
+        "precision_macro": 0.9336904761904762,
+        "recall_macro": 0.9081221198156684,
+        "f1_macro": 0.9185415559361404,
+        "specificity_macro": 0.9829210015974427,
+        "precision_weighted": 0.9349677158999193,
+        "recall_weighted": 0.9067796610169493,
+        "f1_weighted": 0.9182607024494343,
+        "precision_micro": 0.9304347826086956,
+        "recall_micro": 0.9067796610169492,
+        "cohen_kappa": 0.8830209084354723,
+        "mcc": 0.8847881359110538,
+        "ci95": {
+          "accuracy": [
+            0.847457627118644,
+            0.9576271186440678
+          ],
+          "f1_macro": [
+            0.8660288804171292,
+            0.9633643369070574
+          ]
+        }
+      },
+      "metrics_per_class": {
+        "Abrasions": {
+          "tp": 27,
+          "fp": 1,
+          "fn": 4,
+          "tn": 86,
+          "precision": 0.9642857142857143,
+          "recall": 0.8709677419354839,
+          "specificity": 0.9885057471264368,
+          "npv": 0.9555555555555556,
+          "f1_score": 0.9152542372881356,
+          "accuracy_ovr": 0.9576271186440678,
+          "support": 31,
+          "missed": 0,
+          "recall_ci95": [
+            0.7114724304561464,
+            0.9486579883535524
+          ],
+          "precision_ci95": [
+            0.8228742388150135,
+            0.9936676435024582
+          ],
+          "label_id": "Luka lecet"
+        },
+        "Bruise": {
+          "tp": 26,
+          "fp": 4,
+          "fn": 0,
+          "tn": 88,
+          "precision": 0.8666666666666667,
+          "recall": 1.0,
+          "specificity": 0.9565217391304348,
+          "npv": 1.0,
+          "f1_score": 0.9285714285714286,
+          "accuracy_ovr": 0.9661016949152542,
+          "support": 26,
+          "missed": 0,
+          "recall_ci95": [
+            0.8712669561953784,
+            1.0
+          ],
+          "precision_ci95": [
+            0.7031831605558306,
+            0.9469043057578189
+          ],
+          "label_id": "Luka memar"
+        },
+        "Burn": {
+          "tp": 21,
+          "fp": 0,
+          "fn": 3,
+          "tn": 94,
+          "precision": 1.0,
+          "recall": 0.875,
+          "specificity": 1.0,
+          "npv": 0.9690721649484536,
+          "f1_score": 0.9333333333333333,
+          "accuracy_ovr": 0.9745762711864406,
+          "support": 24,
+          "missed": 0,
+          "recall_ci95": [
+            0.6899571185214243,
+            0.9565574496068442
+          ],
+          "precision_ci95": [
+            0.8453561767357979,
+            0.9999999999999999
+          ],
+          "label_id": "Luka bakar"
+        },
+        "Cut": {
+          "tp": 18,
+          "fp": 2,
+          "fn": 3,
+          "tn": 95,
+          "precision": 0.9,
+          "recall": 0.8571428571428571,
+          "specificity": 0.979381443298969,
+          "npv": 0.9693877551020408,
+          "f1_score": 0.8780487804878048,
+          "accuracy_ovr": 0.9576271186440678,
+          "support": 21,
+          "missed": 3,
+          "recall_ci95": [
+            0.6536350585077049,
+            0.950190782017865
+          ],
+          "precision_ci95": [
+            0.6989617935882066,
+            0.9721341060158468
+          ],
+          "label_id": "Luka sayat"
+        },
+        "No Abnormality": {
+          "tp": 15,
+          "fp": 1,
+          "fn": 1,
+          "tn": 101,
+          "precision": 0.9375,
+          "recall": 0.9375,
+          "specificity": 0.9901960784313726,
+          "npv": 0.9901960784313726,
+          "f1_score": 0.9375,
+          "accuracy_ovr": 0.9830508474576272,
+          "support": 16,
+          "missed": 0,
+          "recall_ci95": [
+            0.7167073163197013,
+            0.9888809426916687
+          ],
+          "precision_ci95": [
+            0.7167073163197013,
+            0.9888809426916687
+          ],
+          "label_id": "Kulit normal"
+        }
+      },
+      "top_confusions": [
+        {
+          "actual": "Abrasions",
+          "predicted": "Bruise",
+          "count": 2,
+          "rate_of_actual": 0.06451612903225806
+        },
+        {
+          "actual": "Abrasions",
+          "predicted": "Cut",
+          "count": 2,
+          "rate_of_actual": 0.06451612903225806
+        },
+        {
+          "actual": "Burn",
+          "predicted": "Abrasions",
+          "count": 1,
+          "rate_of_actual": 0.041666666666666664
+        },
+        {
+          "actual": "Burn",
+          "predicted": "Bruise",
+          "count": 1,
+          "rate_of_actual": 0.041666666666666664
+        },
+        {
+          "actual": "Burn",
+          "predicted": "No Abnormality",
+          "count": 1,
+          "rate_of_actual": 0.041666666666666664
+        }
+      ],
+      "detection": {
+        "overall": {
+          "map50": 0.8053244427338904,
+          "map75": 0.3959961341013654,
+          "map50_95": 0.4454666366758282,
+          "precision": 0.7873894221720308,
+          "recall": 0.7668032238763945,
+          "f1": 0.7769599848548921
+        },
+        "per_class": {
+          "Abrasions": {
+            "n_gt": 41,
+            "n_pred": 154,
+            "tp": 30,
+            "fp": 5,
+            "fn": 11,
+            "precision": 0.8571428571428571,
+            "recall": 0.7317073170731707,
+            "ap50": 0.857537640088652,
+            "ap50_95": 0.439894755046282,
+            "ap75": 0.43853894497710966
+          },
+          "Bruise": {
+            "n_gt": 28,
+            "n_pred": 149,
+            "tp": 26,
+            "fp": 7,
+            "fn": 2,
+            "precision": 0.7878787878787878,
+            "recall": 0.9285714285714286,
+            "ap50": 0.9597029461279462,
+            "ap50_95": 0.6543437265641818,
+            "ap75": 0.7259586552710671
+          },
+          "Burn": {
+            "n_gt": 30,
+            "n_pred": 458,
+            "tp": 24,
+            "fp": 4,
+            "fn": 6,
+            "precision": 0.8571428571428571,
+            "recall": 0.8,
+            "ap50": 0.8009281642196473,
+            "ap50_95": 0.3668893862608262,
+            "ap75": 0.2613408301244904
+          },
+          "Cut": {
+            "n_gt": 22,
+            "n_pred": 153,
+            "tp": 18,
+            "fp": 5,
+            "fn": 4,
+            "precision": 0.782608695652174,
+            "recall": 0.8181818181818182,
+            "ap50": 0.7988043042498147,
+            "ap50_95": 0.4196014438055923,
+            "ap75": 0.26678325716251416
+          },
+          "No Abnormality": {
+            "n_gt": 27,
+            "n_pred": 423,
+            "tp": 15,
+            "fp": 8,
+            "fn": 12,
+            "precision": 0.6521739130434783,
+            "recall": 0.5555555555555556,
+            "ap50": 0.609649158983391,
+            "ap50_95": 0.3466038717022589,
+            "ap75": 0.2873589829716456
+          }
+        }
+      },
+      "misclassified": [
+        {
+          "file": "-23_jpeg.rf.b533a7f8ba122c377efb15b4f1cc2b91.jpg",
+          "true": "Burn",
+          "pred": "Bruise",
+          "score": 0.47716572880744934,
+          "top_class": "Bruise"
+        },
+        {
+          "file": "-35_jpg.rf.e47b4aa03b0502fcfb673f3ba19e8d93.jpg",
+          "true": "Burn",
+          "pred": "No Abnormality",
+          "score": 0.5081967115402222,
+          "top_class": "No Abnormality"
+        },
+        {
+          "file": "0295_jpg.rf.d7c6a300b6decef3c98c73b2f529f8df.jpg",
+          "true": "Burn",
+          "pred": "Abrasions",
+          "score": 0.3729602098464966,
+          "top_class": "Abrasions"
+        },
+        {
+          "file": "144_jpg.rf.b7af0e5eafe4c14e5acc31e21efb3308.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.05666649341583252,
+          "top_class": "Burn"
+        },
+        {
+          "file": "200_jpg.rf.61f59dc8a2351d8e9c8fe592f09ed040.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.193180114030838,
+          "top_class": "Cut"
+        },
+        {
+          "file": "210_jpg.rf.43afae0173a3366cf360b99146e6c14f.jpg",
+          "true": "Abrasions",
+          "pred": "Bruise",
+          "score": 0.4873429238796234,
+          "top_class": "Bruise"
+        },
+        {
+          "file": "265_jpg.rf.a81ade2031670327a015d93a6e3bac3c.jpg",
+          "true": "Abrasions",
+          "pred": "Bruise",
+          "score": 0.4315606951713562,
+          "top_class": "Bruise"
+        },
+        {
+          "file": "282_jpg.rf.33dac1feeee2438c4854c08461b12912.jpg",
+          "true": "Cut",
+          "pred": "Tidak Terdeteksi",
+          "score": 0.23129191994667053,
+          "top_class": "Burn"
+        },
+        {
+          "file": "S__78331906_0_jpg.rf.fb29e35a781cd8704c895d2bbd3be2cf.jpg",
+          "true": "No Abnormality",
+          "pred": "Bruise",
+          "score": 0.7626168131828308,
+          "top_class": "Bruise"
+        },
+        {
+          "file": "mirrored_abrasions-28-_jpg.rf.392a7d504d7e34b6fed2a2376666e256.jpg",
+          "true": "Abrasions",
+          "pred": "Cut",
+          "score": 0.7595205903053284,
+          "top_class": "Cut"
+        },
+        {
+          "file": "mirrored_abrasions-31-_jpg.rf.9d5e1d16f107785a99796f39cdeb176e.jpg",
+          "true": "Abrasions",
+          "pred": "Cut",
+          "score": 0.8492672443389893,
+          "top_class": "Cut"
+        }
+      ]
+    }
+  },
+  "threshold_sweep": {
+    "valid": [
+      {
+        "threshold": 0.05,
+        "accuracy": 0.9152542372881356,
+        "f1_macro": 0.9185314010233518,
+        "precision_macro": 0.9174585516037128,
+        "recall_macro": 0.9208481291269258,
+        "undetected_rate": 0.00423728813559322
+      },
+      {
+        "threshold": 0.1,
+        "accuracy": 0.9152542372881356,
+        "f1_macro": 0.9185314010233518,
+        "precision_macro": 0.9174585516037128,
+        "recall_macro": 0.9208481291269258,
+        "undetected_rate": 0.00423728813559322
+      },
+      {
+        "threshold": 0.15,
+        "accuracy": 0.9152542372881356,
+        "f1_macro": 0.9185314010233518,
+        "precision_macro": 0.9174585516037128,
+        "recall_macro": 0.9208481291269258,
+        "undetected_rate": 0.00423728813559322
+      },
+      {
+        "threshold": 0.2,
+        "accuracy": 0.9110169491525424,
+        "f1_macro": 0.9183143635843937,
+        "precision_macro": 0.9209585516037129,
+        "recall_macro": 0.9165928099779898,
+        "undetected_rate": 0.012711864406779662
+      },
+      {
+        "threshold": 0.25,
+        "accuracy": 0.9067796610169492,
+        "f1_macro": 0.917804159502761,
+        "precision_macro": 0.92440058058922,
+        "recall_macro": 0.9125928099779896,
+        "undetected_rate": 0.0211864406779661
+      },
+      {
+        "threshold": 0.3,
+        "accuracy": 0.902542372881356,
+        "f1_macro": 0.9172634644985014,
+        "precision_macro": 0.9276286832402454,
+        "recall_macro": 0.9083374908290536,
+        "undetected_rate": 0.029661016949152543
+      },
+      {
+        "threshold": 0.35,
+        "accuracy": 0.885593220338983,
+        "f1_macro": 0.9097258751745455,
+        "precision_macro": 0.9298929538873597,
+        "recall_macro": 0.8927011271926899,
+        "undetected_rate": 0.05084745762711865
+      },
+      {
+        "threshold": 0.4,
+        "accuracy": 0.8686440677966102,
+        "f1_macro": 0.9032219767895123,
+        "precision_macro": 0.9365307931350337,
+        "recall_macro": 0.8764458080437537,
+        "undetected_rate": 0.07627118644067797
+      },
+      {
+        "threshold": 0.45,
+        "accuracy": 0.8601694915254238,
+        "f1_macro": 0.897557640060257,
+        "precision_macro": 0.9357287690996132,
+        "recall_macro": 0.8659128926832521,
+        "undetected_rate": 0.0847457627118644
+      },
+      {
+        "threshold": 0.5,
+        "accuracy": 0.8432203389830508,
+        "f1_macro": 0.8937065325245174,
+        "precision_macro": 0.9496150986834216,
+        "recall_macro": 0.8477436136863868,
+        "undetected_rate": 0.11440677966101695
+      },
+      {
+        "threshold": 0.55,
+        "accuracy": 0.809322033898305,
+        "f1_macro": 0.8753286724642224,
+        "precision_macro": 0.9521590050161478,
+        "recall_macro": 0.8146652437804308,
+        "undetected_rate": 0.15254237288135594
+      },
+      {
+        "threshold": 0.6,
+        "accuracy": 0.7796610169491526,
+        "f1_macro": 0.8583281380746023,
+        "precision_macro": 0.9545096763701416,
+        "recall_macro": 0.7852232375108383,
+        "undetected_rate": 0.1864406779661017
+      },
+      {
+        "threshold": 0.65,
+        "accuracy": 0.7372881355932204,
+        "f1_macro": 0.8399110742506968,
+        "precision_macro": 0.974025605704562,
+        "recall_macro": 0.7461671446675116,
+        "undetected_rate": 0.24152542372881355
+      },
+      {
+        "threshold": 0.7,
+        "accuracy": 0.6822033898305084,
+        "f1_macro": 0.8016601417578679,
+        "precision_macro": 0.9708637113511788,
+        "recall_macro": 0.6939814580137398,
+        "undetected_rate": 0.2966101694915254
+      },
+      {
+        "threshold": 0.75,
+        "accuracy": 0.5635593220338984,
+        "f1_macro": 0.7094109268944031,
+        "precision_macro": 0.9687068965517242,
+        "recall_macro": 0.5742666577736277,
+        "undetected_rate": 0.4194915254237288
+      },
+      {
+        "threshold": 0.8,
+        "accuracy": 0.4279661016949153,
+        "f1_macro": 0.5977738183076908,
+        "precision_macro": 0.973548387096774,
+        "recall_macro": 0.4526264256653104,
+        "undetected_rate": 0.5635593220338984
+      },
+      {
+        "threshold": 0.85,
+        "accuracy": 0.2584745762711864,
+        "f1_macro": 0.41968549505932984,
+        "precision_macro": 0.9666666666666668,
+        "recall_macro": 0.2897472153671713,
+        "undetected_rate": 0.7372881355932204
+      },
+      {
+        "threshold": 0.9,
+        "accuracy": 0.1228813559322034,
+        "f1_macro": 0.23280675961033545,
+        "precision_macro": 0.8,
+        "recall_macro": 0.16723270859734543,
+        "undetected_rate": 0.8771186440677966
+      },
+      {
+        "threshold": 0.95,
+        "accuracy": 0.06779661016949153,
+        "f1_macro": 0.14222222222222222,
+        "precision_macro": 0.2,
+        "recall_macro": 0.1103448275862069,
+        "undetected_rate": 0.9322033898305084
+      }
+    ],
+    "test": [
+      {
+        "threshold": 0.05,
+        "accuracy": 0.9152542372881356,
+        "f1_macro": 0.9159409183796129,
+        "precision_macro": 0.917251552795031,
+        "recall_macro": 0.9176459293394779,
+        "undetected_rate": 0.0
+      },
+      {
+        "threshold": 0.1,
+        "accuracy": 0.9152542372881356,
+        "f1_macro": 0.9198262097764676,
+        "precision_macro": 0.9255519480519482,
+        "recall_macro": 0.9176459293394779,
+        "undetected_rate": 0.00847457627118644
+      },
+      {
+        "threshold": 0.15,
+        "accuracy": 0.9152542372881356,
+        "f1_macro": 0.9198262097764676,
+        "precision_macro": 0.9255519480519482,
+        "recall_macro": 0.9176459293394779,
+        "undetected_rate": 0.00847457627118644
+      },
+      {
+        "threshold": 0.2,
+        "accuracy": 0.9067796610169492,
+        "f1_macro": 0.9144835849216477,
+        "precision_macro": 0.9245995670995673,
+        "recall_macro": 0.9081221198156684,
+        "undetected_rate": 0.01694915254237288
+      },
+      {
+        "threshold": 0.25,
+        "accuracy": 0.9067796610169492,
+        "f1_macro": 0.9185415559361404,
+        "precision_macro": 0.9336904761904762,
+        "recall_macro": 0.9081221198156684,
+        "undetected_rate": 0.025423728813559324
+      },
+      {
+        "threshold": 0.3,
+        "accuracy": 0.9067796610169492,
+        "f1_macro": 0.9185415559361404,
+        "precision_macro": 0.9336904761904762,
+        "recall_macro": 0.9081221198156684,
+        "undetected_rate": 0.025423728813559324
+      },
+      {
+        "threshold": 0.35,
+        "accuracy": 0.9067796610169492,
+        "f1_macro": 0.9185415559361404,
+        "precision_macro": 0.9336904761904762,
+        "recall_macro": 0.9081221198156684,
+        "undetected_rate": 0.025423728813559324
+      },
+      {
+        "threshold": 0.4,
+        "accuracy": 0.9067796610169492,
+        "f1_macro": 0.9216976050302375,
+        "precision_macro": 0.9408333333333333,
+        "recall_macro": 0.9081221198156684,
+        "undetected_rate": 0.03389830508474576
+      },
+      {
+        "threshold": 0.45,
+        "accuracy": 0.9067796610169492,
+        "f1_macro": 0.9250742284068607,
+        "precision_macro": 0.9468103448275862,
+        "recall_macro": 0.9081221198156684,
+        "undetected_rate": 0.0423728813559322
+      },
+      {
+        "threshold": 0.5,
+        "accuracy": 0.8813559322033898,
+        "f1_macro": 0.9144947151548358,
+        "precision_macro": 0.9565631808278866,
+        "recall_macro": 0.8795506912442397,
+        "undetected_rate": 0.0847457627118644
+      },
+      {
+        "threshold": 0.55,
+        "accuracy": 0.864406779661017,
+        "f1_macro": 0.9088128969730175,
+        "precision_macro": 0.9690631808278866,
+        "recall_macro": 0.8587173579109063,
+        "undetected_rate": 0.11016949152542373
+      },
+      {
+        "threshold": 0.6,
+        "accuracy": 0.8220338983050848,
+        "f1_macro": 0.8846407021847273,
+        "precision_macro": 0.968470588235294,
+        "recall_macro": 0.8160477962897318,
+        "undetected_rate": 0.15254237288135594
+      },
+      {
+        "threshold": 0.65,
+        "accuracy": 0.7796610169491526,
+        "f1_macro": 0.8538392490239275,
+        "precision_macro": 0.967,
+        "recall_macro": 0.7686207609594706,
+        "undetected_rate": 0.19491525423728814
+      },
+      {
+        "threshold": 0.7,
+        "accuracy": 0.7033898305084746,
+        "f1_macro": 0.8038290598290599,
+        "precision_macro": 0.9650000000000001,
+        "recall_macro": 0.6945498050336759,
+        "undetected_rate": 0.2711864406779661
+      },
+      {
+        "threshold": 0.75,
+        "accuracy": 0.6016949152542372,
+        "f1_macro": 0.7250760667903524,
+        "precision_macro": 0.9579710144927536,
+        "recall_macro": 0.593097896726929,
+        "undetected_rate": 0.3728813559322034
+      },
+      {
+        "threshold": 0.8,
+        "accuracy": 0.5,
+        "f1_macro": 0.6540604709466692,
+        "precision_macro": 0.9800000000000001,
+        "recall_macro": 0.5076022096183387,
+        "undetected_rate": 0.4915254237288136
+      },
+      {
+        "threshold": 0.85,
+        "accuracy": 0.2711864406779661,
+        "f1_macro": 0.41952380952380947,
+        "precision_macro": 1.0,
+        "recall_macro": 0.2877112135176651,
+        "undetected_rate": 0.7288135593220338
+      },
+      {
+        "threshold": 0.9,
+        "accuracy": 0.0847457627118644,
+        "f1_macro": 0.16311844077961019,
+        "precision_macro": 0.4,
+        "recall_macro": 0.11057692307692309,
+        "undetected_rate": 0.9152542372881356
+      },
+      {
+        "threshold": 0.95,
+        "accuracy": 0.05084745762711865,
+        "f1_macro": 0.10909090909090909,
+        "precision_macro": 0.2,
+        "recall_macro": 0.075,
+        "undetected_rate": 0.9491525423728814
+      }
+    ]
+  },
+  "training_curve_last_epoch": {
+    "epoch": 50.0,
+    "time": 35639.3,
+    "train/box_loss": 1.00335,
+    "train/cls_loss": 0.71328,
+    "train/dfl_loss": 1.42128,
+    "metrics/precision(B)": 0.78883,
+    "metrics/recall(B)": 0.68564,
+    "metrics/mAP50(B)": 0.75504,
+    "metrics/mAP50-95(B)": 0.44836,
+    "val/box_loss": 1.49981,
+    "val/cls_loss": 1.18205,
+    "val/dfl_loss": 1.8141,
+    "lr/pg0": 3.31078e-05,
+    "lr/pg1": 3.31078e-05,
+    "lr/pg2": 3.31078e-05
+  },
+  "figures": {
+    "cm_train": "reports\\confusion_matrix_training.png",
+    "cm_valid": "reports\\confusion_matrix_validasi.png",
+    "cm_test": "reports\\confusion_matrix_testing.png",
+    "cm_combined": "reports\\confusion_matrix.png",
+    "per_class": "reports\\per_class_metrics.png",
+    "pr": "reports\\pr_curve_test.png",
+    "sweep": "reports\\threshold_sweep.png",
+    "gap": "reports\\generalization_gap.png",
+    "training": "reports\\training_curves.png",
+    "misclassified": "reports\\misclassified_test.png"
+  }
+}

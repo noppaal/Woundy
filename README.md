@@ -36,81 +36,95 @@ Sistem mampu mengidentifikasi dan menangani 5 kategori kondisi kulit utama:
   - Kuesioner triage sekunder interaktif untuk penyesuaian dinamis (misal: lepuhan bula, perdarahan aktif memancar).
   - Tombol darurat medis langsung (**119 Ambulans** / **112 Panggilan Darurat Nasional**).
 
-- **Dashboard Evaluasi Model & Metrik Riset (Bab 3.5)**:
-  - Skor performa kuantitatif: mAP@0.5, mAP@0.5:0.95, Precision, Recall, dan F1-Score.
-  - Grafik interaktif performa per kelas dan distribusi dataset (Chart.js).
-  - Dokumentasi matematis formula evaluasi (IoU, mAP, F1-Score).
+- **Tab Evaluasi Model (Subbab 3.5)** di aplikasi Streamlit, seluruh angka dibaca dari `reports/metrics.json` (hasil perhitungan nyata, bukan angka manual):
+  - Evaluasi **tingkat citra**: Akurasi, Presisi, Recall, Spesifisitas, F1 (macro/weighted/micro), Balanced Accuracy, Cohen's Kappa, MCC, interval kepercayaan 95%.
+  - Rincian **TP / FP / FN / TN** per kelas dan **matriks konfusi 5×6** (kolom ke-6 = *Tidak Terdeteksi*).
+  - Evaluasi **tingkat deteksi (box)**: Presisi, Recall, AP@0.5, AP@0.75, AP@0.5:0.95, mAP.
+  - Analisis pendukung: sweep threshold, kurva Precision-Recall, kurva training, kesenjangan train-valid-test (overfitting), contoh citra salah klasifikasi, kecepatan inferensi terukur.
+  - Laporan Bahasa Indonesia otomatis dengan rumus dan contoh perhitungan: `reports/LAPORAN_EVALUASI.md`.
 
 - **Pipeline Pelatihan & Integrasi Dataset**:
   - Konfigurasi pelatihan YOLOv8 lokal (`scripts/train.py`).
-  - Pengunduh otomatis dataset 1.391 citra dari Roboflow Universe (`scripts/download_dataset.py`).
-  - Skrip pengujian dan evaluasi mandiri (`scripts/evaluate.py`).
+  - Pengunduh otomatis dataset dari Roboflow Universe (`scripts/download_dataset.py`).
+  - Pembersih kebocoran data antar split (`scripts/clean_leakage.py`).
+  - Evaluasi lengkap (`scripts/evaluate_full.py`), laporan (`scripts/generate_report.py`), dan pemeriksa metrik di terminal (`scripts/check_metrics.py`).
+
+---
+
+## 🗂️ Catatan Dataset
+
+- Dataset asli berjumlah **1.391 citra** (979 latih / 275 valid / 137 uji). Pada export Roboflow, split **train diaugmentasi ±3×** sehingga berisi **2.934 file**; valid dan test tidak diaugmentasi.
+- Ditemukan **kebocoran data** (citra valid/test yang sama atau sangat mirip dengan citra latih, terdeteksi dengan *perceptual hash*). `scripts/clean_leakage.py` memindahkannya ke `dataset_removed/` (bukan menghapus; dapat dikembalikan dengan `--restore`). Jumlah akhir: **train 2.934 / valid 236 / test 118**.
+- Metrik pada split *training* hanya menunjukkan kemampuan model menghafal. Kinerja sebenarnya diukur pada split **test**.
 
 ---
 
 ## 📂 Struktur Direktori Proyek
 
 ```
-c:\OPENCODE/
-├── core/
-│   ├── detector.py             # Pipeline deteksi YOLOv8 & computer vision visualizer
-│   ├── rule_engine.py          # Forward Chaining Rule-Based System (Tabel 3.1)
-│   └── evaluator.py            # Mesin kalkulasi metrik (mAP, IoU, Precision, Recall, F1)
-├── dataset/
-│   └── data.yaml               # Konfigurasi kelas dataset YOLOv8
+TA/
+├── app/                          # Aplikasi Streamlit (ONNX + Forward Chaining)
+│   ├── streamlit_app.py          # Antarmuka: Pemeriksaan luka | Evaluasi model | Tentang sistem
+│   ├── config.yaml               # Threshold, kelas, teks aplikasi
+│   ├── core/
+│   │   ├── detector.py           # Inferensi YOLOv8 ONNX (onnxruntime)
+│   │   ├── metrics.py            # Perhitungan metrik (confusion matrix, P/R/F1, Kappa, MCC, mAP)
+│   │   └── evaluator.py          # Pemuat hasil evaluasi dari reports/metrics.json
+│   └── rbs/                      # Mesin aturan Forward Chaining (rules.yaml, engine.py)
+├── core/ , app.py, templates/, static/   # Versi Flask lama (opsional)
+├── dataset/                      # train / valid / test (setelah dibersihkan dari kebocoran)
+├── dataset_removed/              # Citra bocor yang dipindahkan (dapat dikembalikan)
 ├── models/
-│   └── wound_yolov8n.pt        # Bobot model YOLOv8
-├── sample_images/              # Citra sampel riil dari dataset Roboflow
+│   ├── wound_yolov8n.pt          # Bobot PyTorch
+│   └── wound_yolov8n.onnx        # Model yang dipakai aplikasi
+├── reports/                      # Keluaran evaluasi (metrics.json, gambar, LAPORAN_EVALUASI.md)
 ├── scripts/
-│   ├── download_dataset.py     # Unduh dataset 1.391 citra dari Roboflow API
-│   ├── train.py                # Pelatihan YOLOv8 (imgsz 640, epochs 50, batch 16)
-│   └── evaluate.py             # Evaluasi model pada test split (137 citra)
-├── static/
-│   ├── css/
-│   │   └── style.css           # Desain UI modern medical healthtech
-│   └── js/
-│       └── app.js              # Kontroler antarmuka, kamera, dan API async
-├── templates/
-│   └── index.html              # Antarmuka web utama
-├── app.py                      # Server backend Flask & REST API
-├── requirements.txt            # Dependensi Python
-└── README.md                   # Dokumentasi lengkap
+│   ├── download_dataset.py       # Unduh dataset dari Roboflow
+│   ├── clean_leakage.py          # Deteksi & pindahkan citra bocor antar split
+│   ├── train.py                  # Pelatihan YOLOv8
+│   ├── evaluate_full.py          # Evaluasi lengkap (citra + deteksi) -> reports/
+│   ├── generate_report.py        # Laporan Markdown Bahasa Indonesia
+│   ├── check_metrics.py          # Cetak metrik di terminal (--explain untuk penjelasan)
+│   └── evaluate.py               # Evaluasi cepat bawaan Ultralytics (perlu PyTorch)
+├── streamlit_app.py              # Entry point deployment
+└── requirements.txt
 ```
 
 ---
 
 ## 🚀 Panduan Menjalankan Aplikasi
 
-### 1. Menjalankan Server Web Lokal
-Jalankan perintah berikut di terminal:
+### 1. Menjalankan Aplikasi Streamlit
 ```bash
-python app.py
+streamlit run streamlit_app.py
 ```
-Aplikasi akan aktif di peramban pada alamat:
-👉 **`http://127.0.0.1:5000`**
 
-### 2. Mengunduh Dataset Penuh dari Roboflow Universe (1.391 Citra)
-Cukup jalankan perintah tanpa parameter, lalu masukkan API Key Anda saat diminta:
-```powershell
-python scripts/download_dataset.py
-```
-Atau sertakan API Key secara langsung (gunakan tanda petik dua):
+### 2. Mengunduh Dataset dari Roboflow Universe
 ```powershell
 python scripts/download_dataset.py --api-key "MASUKKAN_API_KEY_ANDA"
 ```
-*(Atau gunakan tombol unduh langsung pada menu tab **Dataset & Pelatihan** di aplikasi web `http://127.0.0.1:5000`)*.
 
-### 3. Melatih Model YOLOv8
-Setelah dataset terunduh ke folder `dataset/`:
+### 3. Membersihkan Kebocoran Data antar Split
+```bash
+python scripts/clean_leakage.py            # dry-run: hanya melaporkan
+python scripts/clean_leakage.py --apply    # memindahkan citra bocor ke dataset_removed/
+python scripts/clean_leakage.py --restore  # mengembalikan semuanya
+```
+
+### 4. Melatih Model YOLOv8
 ```bash
 python scripts/train.py --epochs 50 --batch 16 --imgsz 640 --device 0
 ```
-*(Gunakan `--device cpu` jika tidak memiliki GPU NVIDIA CUDA)*.
+*(Gunakan `--device cpu` jika tidak memiliki GPU NVIDIA CUDA).*
 
-### 4. Mengevaluasi Model pada Test Set
+### 5. Mengevaluasi Model (Matriks Evaluasi)
 ```bash
-python scripts/evaluate.py --model models/wound_yolov8n.pt --split test
+python scripts/evaluate_full.py        # hitung metrik train/valid/test -> reports/metrics.json + gambar
+python scripts/generate_report.py      # -> reports/LAPORAN_EVALUASI.md
+python scripts/check_metrics.py        # tampilkan di terminal (tambahkan --explain untuk arti tiap metrik)
 ```
+Pilihan: `--conf 0.35` (threshold citra, default sama dengan aplikasi), `--iou 0.45`, `--splits valid test`.
+Tab **Evaluasi model** pada aplikasi membaca hasil yang sama.
 
 ---
 

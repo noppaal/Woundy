@@ -1,0 +1,234 @@
+{
+  "valid": [
+    {
+      "file": "-13_jpg.rf.edadfbab189c19da97a0d633973dc7ed.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "-19_jpg.rf.b593f0519c0e2eeab5e3f962382c683b.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "-56_jpg.rf.7b48aafc9bb48d31c7b025d02ecb940d.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0153_jpg.rf.e31fd41e4a83e9aad23a425dfa1cca35.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0222_jpg.rf.c4c903cd8fa391fd1f7034c1bacc8c46.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0254_jpg.rf.e8a228a839e5c0d9b5084e91f7ac0701.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0255_jpg.rf.b826ac21a96007b137d8fc31f3cc2950.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0285_jpg.rf.99c89418575bcfb889ee8238e7d24841.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0307_jpg.rf.4aaa9d90e85dcbd6aee48c304c098dcb.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0365_jpg.rf.d37dc62e9c00fb90f2cdc795ac1455d0.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "116_jpg.rf.bea038cc26f68d7294f2381657f2905e.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "123_jpg.rf.a0f4015eeb3ca99b5b41d3d439f5fde1.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "124_jpg.rf.93603b724fadcfc0928b4ed1c8595de8.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "131_jpg.rf.55c832c9cfdd1c3ce0f36a2c74dc6ab3.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "133_jpg.rf.569b4a5a44c42dc08cfe03ad725b0349.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "137_jpg.rf.343697ff08520f5ca190f51b848574c0.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "162_jpg.rf.a0b1803edfd4423b465517823012640e.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "20_jpg.rf.9056cb759842d1421c51cfd2f6b4091f.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "222_jpg.rf.49178e3605a9581392e73c0db09cba4f.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "228_jpg.rf.f4528595a6ec33dd0afee9ab2f1e6e88.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "245_jpg.rf.538db8c2b1d89f40b8a45d313df1fd8d.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "256_jpg.rf.203ab5134e435ccae3757edcc7762141.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "25_jpg.rf.e69d7b3ff67bd673f4374e53ed4601e6.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "303_jpg.rf.ed068ea7fff5ba247d05b6f579a69681.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "307_jpg.rf.30a1c664be42eae9a14673c785f9ffa2.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "339_jpg.rf.08f879cd3c780101d027bd6fcaace32e.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "52_jpg.rf.a85fe2bf9a8b5dfcd6c0cc334da3f45e.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "79_jpg.rf.f9d291071c91184fa6f368c23671fe9b.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "7_jpg.rf.6f4b2eec6fd6ef416aeccb04b9485449.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "93_jpg.rf.a2ba070987e804ea538a98466c4ca9fe.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "LINE_ALBUM_-_250207_14_jpg.rf.a96feb84e572ed36cbb8f4d8b2c62e3f.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "abrasions-11-_jpg.rf.203dca86370b05ef53d13ea4fa898021.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "abrasions-65-_jpg.rf.9d613caa788e90167553ebe6a115cf66.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "abrasions-76-_jpg.rf.997cd0a2e6bcf1cba4c47d7f49605b0a.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "cut-31-_jpg.rf.7a547cb70a051e73209f95c0bb6392a4.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "mirrored_abrasions-46-_jpg.rf.885763895084cd10b2657e7ee350b3a8.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "mirrored_abrasions-50-_jpg.rf.301592253e5176ef982684fd447821b1.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "mirrored_cut-19-_jpg.rf.3690f8ca518817036de1e28dfe1aa3eb.jpg",
+      "similar_to": "train"
+    }
+  ],
+  "test": [
+    {
+      "file": "-16_jpg.rf.66ef21ef2383e91a3e807be78b71cbc0.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "-21_jpg.rf.e43ebc455aeafdde7758964435b16eda.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "-26_jpeg.rf.1a4be5931b9edf19ef4174822ad88557.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0119_jpg.rf.ba1f52cd7f7e860397c8d1cbabd042d3.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0250_jpg.rf.0cae00fa47e995cd6318e5c36c77f6e7.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "0341_jpg.rf.13872cfc3957263a7f1e1c3b2b967d02.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "111_jpg.rf.f01430372de7fe747b22e22406f48dc0.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "11_jpg.rf.fdd89c3ff07995e7dece2b1fc66153e1.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "177_jpg.rf.0fb2edec987eed77602f97e676db8d72.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "19_jpg.rf.8acf447e3e8dcc8563e96737a0bc4c90.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "330_jpg.rf.ace2f4b2116beb09c0e762ac74633cd7.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "35_jpg.rf.1cfc9075b43dd2c2ccb70560da4e7a62.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "57_jpg.rf.de611695dc28a7e9f7d0d5cf9e86843a.jpg",
+      "similar_to": "valid"
+    },
+    {
+      "file": "5_jpg.rf.32dfeabce76747ce72379d63747b4dd5.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "burns-41-_jpg.rf.5b808d5ff61ef22a8ca3e740055f57c6.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "cut-1-_jpg.rf.172c00066e064feebf97b335d1fa68b8.jpg",
+      "similar_to": "valid"
+    },
+    {
+      "file": "cut-38-_jpg.rf.85a6e3ce626a0267d043dc746ad03021.jpg",
+      "similar_to": "train"
+    },
+    {
+      "file": "cut-41-_jpg.rf.41bdf77e6a41181263b9b65b690c57e5.jpg",
+      "similar_to": "valid"
+    },
+    {
+      "file": "mirrored_cut-4-_jpg.rf.d55e2414c7adf31163dc0706a01f105a.jpg",
+      "similar_to": "train"
+    }
+  ]
+}
